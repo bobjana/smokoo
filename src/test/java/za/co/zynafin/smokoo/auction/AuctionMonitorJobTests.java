@@ -31,7 +31,7 @@ public class AuctionMonitorJobTests {
 		monitorJob.setAuctionService(auctionService);
 
 		BiddingRecorderJob bidHistoryExecutor = mock(BiddingRecorderJob.class);
-		monitorJob.setBidHistoryRecorderJob(bidHistoryExecutor);
+		monitorJob.setBiddingRecorderJob(bidHistoryExecutor);
 		//WHEN
 		monitorJob.run();
 		Thread.sleep(1000);
