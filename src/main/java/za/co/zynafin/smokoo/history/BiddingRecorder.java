@@ -1,22 +1,19 @@
 package za.co.zynafin.smokoo.history;
 
-import java.net.NoRouteToHostException;
 import java.text.ParseException;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
 import za.co.zynafin.smokoo.Bid;
+import za.co.zynafin.smokoo.Constants;
 import za.co.zynafin.smokoo.auction.AuctionClosedException;
 import za.co.zynafin.smokoo.bid.BidParser;
 import za.co.zynafin.smokoo.bid.BidService;
+import za.co.zynafin.smokoo.io.SmokooConnector;
 
 @Component
 public class BiddingRecorder {
@@ -25,8 +22,7 @@ public class BiddingRecorder {
 
 	private BidParser bidParser;
 	private BidService bidHistoryService;
-	private HttpClient httpClient;
-	private static final String BASE_URL = "http://www.smokoo.co.za/ajax_get_auction_bids.php?title=";
+	private SmokooConnector smokooConnector;
 
 	@Autowired
 	public void setBidParser(BidParser bidParser) {
@@ -38,9 +34,9 @@ public class BiddingRecorder {
 		this.bidHistoryService = bidHistoryService;
 	}
 	
-	//NOTE: Used for testing purposes
-	public void setHttpClient(HttpClient httpClient) {
-		this.httpClient = httpClient;
+	@Autowired
+	public void setSmokooConnector(SmokooConnector smokooConnector) {
+		this.smokooConnector = smokooConnector;
 	}
 
 	public void record(Auction auction) throws AuctionClosedException {
@@ -55,27 +51,7 @@ public class BiddingRecorder {
 	}
 
 	private String requestBidHistory(Auction auction) {
-		GetMethod getMethod = new GetMethod(BASE_URL + auction.getAuctionTitle());
-		int status;
-		try {
-			status = getHttpClient().executeMethod(getMethod);
-			if (HttpStatus.SC_OK != status) {
-				throw new RuntimeException("Unable to request bid history - " + status);
-			}
-			return getMethod.getResponseBodyAsString();
-		} catch (NoRouteToHostException e){
-			return null;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
+		return smokooConnector.get(Constants.AUCTION_BID_HISTORY_URL + auction.getAuctionTitle());
 	}
-	
-	private HttpClient getHttpClient() {
-		if (this.httpClient == null){
-			this.httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		}
-		return httpClient;
-	}
+
 }

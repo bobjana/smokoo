@@ -20,6 +20,7 @@ import za.co.zynafin.smokoo.Bid;
 import za.co.zynafin.smokoo.bid.BidParser;
 import za.co.zynafin.smokoo.bid.BidService;
 import za.co.zynafin.smokoo.history.BiddingRecorder;
+import za.co.zynafin.smokoo.io.SmokooConnector;
 
 public class BidHistoryRecorderTests {
 
@@ -27,7 +28,8 @@ public class BidHistoryRecorderTests {
 	public void record() throws Exception {
 		// GIVEN
 		BiddingRecorder recorder = new BiddingRecorder();
-		recorder.setHttpClient(getTestHttpClient());
+		SmokooConnector connector = Mockito.mock(SmokooConnector.class);
+		recorder.setSmokooConnector(connector);
 		Auction auction = new Auction();
 		BidService bidHistoryService = Mockito.mock(BidService.class);
 		recorder.setBidHistoryService(bidHistoryService);
@@ -42,43 +44,6 @@ public class BidHistoryRecorderTests {
 		Mockito.verify(bidHistoryService).save(auction, mockBids);
 	}
 
-	private HttpClient getTestHttpClient() {
-//		GetMethod getMethod = Mockito.mock(GetMethod.class);
-//		HttpClient httpClient = Mockito.mock(HttpClient.class);
-//		when(httpClient.e)
-		return new StubHttpClient();
-	}
-	
-	
-	private class StubHttpClient extends HttpClient{
-
-		public StubHttpClient() {
-			super();
-		}
-
-		public StubHttpClient(HttpClientParams params,
-				HttpConnectionManager httpConnectionManager) {
-			super(params, httpConnectionManager);
-		}
-
-		public StubHttpClient(HttpClientParams params) {
-			super(params);
-		}
-
-		public StubHttpClient(HttpConnectionManager httpConnectionManager) {
-			super(httpConnectionManager);
-		}
-
-		@Override
-		public int executeMethod(HttpMethod method) throws IOException,
-				HttpException {
-			method = Mockito.mock(GetMethod.class);
-			return 200;
-		}
-		
-		
-		
-	}
 	
 
 

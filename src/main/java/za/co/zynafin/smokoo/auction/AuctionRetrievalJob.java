@@ -3,15 +3,14 @@ package za.co.zynafin.smokoo.auction;
 import java.util.List;
 import java.util.TimerTask;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
+import za.co.zynafin.smokoo.Constants;
 import za.co.zynafin.smokoo.auction.parser.OpenAuctionParser;
+import za.co.zynafin.smokoo.io.SmokooConnector;
 
 /**
  * A scheduled job running periodically to refresh information about auctions
@@ -24,8 +23,7 @@ public class AuctionRetrievalJob extends TimerTask{
 
 	private AuctionService auctionService;
 	private OpenAuctionParser auctionParser;
-	private static final String DEFAULT_URL = "http://www.smokoo.co.za/";
-	private HttpClient httpClient = new HttpClient();
+	private SmokooConnector smokooConnector;
 	
 	@Autowired
 	public void setAuctionService(AuctionService auctionService) {
@@ -37,26 +35,17 @@ public class AuctionRetrievalJob extends TimerTask{
 		this.auctionParser = auctionParser;
 	}
 
+	@Autowired
+	public void setSmokooConnector(SmokooConnector smokooConnector) {
+		this.smokooConnector = smokooConnector;
+	}
+
 	@Override
 	public void run() {
 		log.info("Starting auction retrieval job...");
-		String content = requestAuctionSummary();
-		List<Auction> auctions = auctionParser.parse(content);
+		List<Auction> auctions = auctionParser.parse(smokooConnector.get(Constants.ACTIVE_AUCTIONS_URL));
 		auctionService.save(auctions);
 	}
 	
-	private String requestAuctionSummary() {
-		GetMethod getMethod = new GetMethod(DEFAULT_URL);
-		int status;
-		try {
-			status = httpClient.executeMethod(getMethod);
-			if (HttpStatus.SC_OK != status) {
-				throw new RuntimeException("Unable to request auction summary - " + status);
-			}
-			return getMethod.getResponseBodyAsString();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 	
 }
