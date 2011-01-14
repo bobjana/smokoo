@@ -1,0 +1,498 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<title>Smokoo Auctions</title> 
+<meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+<meta http-equiv="content-language" content="EN" /> 
+<meta name="description" content="An innovative and new generation auction site." /> 
+<meta name="keywords" content="Smokoo Shop PTY Ltd" /> 
+	
+	
+<script src="http://static.smokoo.co.za//js/prototype.js" type="text/javascript"></script> 
+<script src="http://static.smokoo.co.za//js/js_functions.js" type="text/javascript"></script> 
+<script language="javascript" type="text/javascript" src="http://static.smokoo.co.za//js/sa/scriptaculous.js"></script> 
+<script language="javascript" type="text/javascript" src="http://static.smokoo.co.za//js/plugin/carousel.js"></script> 
+<script type="text/javascript" src="http://static.smokoo.co.za//js/windows/window.js"> </script> 
+<script type="text/javascript" src="http://static.smokoo.co.za//js/windows/window_effects.js"> </script> 
+<script type="text/javascript" src="http://static.smokoo.co.za//js/windows/tooltip.js"> </script> 
+<script type="text/javascript" src="http://static.smokoo.co.za//js/time_left.js"> </script> 
+<link href="http://static.smokoo.co.za//js/windows/themes/default.css" rel="stylesheet" type="text/css"/> 
+<link href="http://static.smokoo.co.za//js/windows/themes/alphacube.css" rel="stylesheet" type="text/css"/> 
+<link href="http://static.smokoo.co.za//js/windows/themes/tooltip.css" rel="stylesheet" type="text/css"/> 
+<link rel="stylesheet" type="text/css" href="http://static.smokoo.co.za//css/style.css" media="all" /> 
+<link rel="stylesheet" type="text/css" href="http://static.smokoo.co.za//css/common.css" media="all" /> 
+<link rel="shortcut icon" href="/favicon.ico" /> 
+<script> 
+var finished_phrase="Finished";
+var currency_fromat='<span>R</span>^^^^^';
+</script> 
+ 
+ 
+ 
+<script type="text/javascript"> 
+<!--
+ 
+function MM_jumpMenu(targ,selObj,restore){ //v3.0
+  eval(targ+".location='/live_auctions.php?cat_id="+selObj.value+"'");
+  if (restore) selObj.selectedIndex=0;
+}
+//-->
+</script> 
+ 
+</head> 
+<body> <div id="ajax_login" style="display: none"><div style="text-align: center; cursor: pointer;" onclick="location.href='/'"><img src="http://static.smokoo.co.za//images/logo.gif"></div><div id='login_error_msg' style="color: red; font-weight: bold; display: none">&nbsp;</div><form action="/ajax_login.php" id="ajax_sign_in" style="padding; 0; margin: 0;"><table width="400" border="0" cellspacing="0" cellpadding="0"><tr><td height="20" align="center" valign="top">&nbsp;</td></tr><tr><td align="center" valign="top"><table width="400" border="0" cellspacing="4" cellpadding="0"><tr><td class="form-label" align="right" width="140">E-mail</td><td align="left">*<input type="text" name="email" id="login_email"value="" class="form-el"title="Please enter your email address." dir="ltr" /></td></tr><tr><td class="form-row-distance" colspan="3"></td></tr><tr><td class="form-label" align="right">Password</td><td align="left">*<input type="password" name="pwd" id="login_pwd"value="" class="form-el" dir="ltr" title="Please enter your password" />&nbsp;&nbsp;<inputtype="submit" value="Login"></td></tr><tr><td class="form-label modify-user" align="right"><br /></td><td align="left">&nbsp;&nbsp;<a href="password.php">Forgot Password?</a>&nbsp;<br /><br /><table><tr><td valign="middle">Not registered??&nbsp;&nbsp;</td><td valign="middle"><a href="/modify_user.php" class="blacktext">Register</a></div></td></tr></table></td></tr></table></td></tr><tr><td height="20" align="center" valign="top">&nbsp;</td></tr></table><div style="text-align: center;"><input type="button" value="Login" onclick="Dialog.okCallback();"><br><br>or <a href="javascript:void(0);" onclick="Dialog.cancelCallback();">cancel</a></div></form></div>
+
+<style>
+
+.alphacube_buttons {
+
+	display: none;
+
+}
+
+</style>
+
+<script>
+
+
+
+function AjaxLogin()
+
+{
+
+    Dialog.confirm($('ajax_login').innerHTML, 
+
+		{
+
+        className:"alphacube", 
+
+        width:400,
+
+        zIndex:1000,
+
+        okLabel: "login",
+
+        cancelLabel: "cancel", 
+
+        onOk:function(win)
+
+	       { 
+
+ 	           $('ajax_sign_in').request(
+
+ 		 	   {
+
+  		 		  onComplete: function (transport)
+
+                  {
+
+ 		 		     if(transport.responseText==1)
+
+		 		     {
+
+ 	 		 		    location.reload();
+
+ 	 	 		     }
+
+ 	 		 		 else if(transport.responseText==2)
+
+ 	 	 		     {
+
+  	 		 			SetAjaxLoginError('This email is not registered');
+
+            		    return false;
+
+            		 }
+
+ 	 		 		 else if(transport.responseText==3)
+
+ 	 	 		     {
+
+  	 		 			SetAjaxLoginError('Wrong password');
+
+            		    return false;
+
+            		 }
+
+ 	 		 		 else if(transport.responseText==4)
+
+ 	 	 		     {
+
+  	 		 			SetAjaxLoginError('Login Error. You must verify your e-mail.');
+
+            		    return false;
+
+            		 }
+
+ 	 		 		 else
+
+ 	 	 		     {
+
+  	 		 			SetAjaxLoginError(transport.responseText);
+
+            		    return false;
+
+            		 }
+
+  		 		  }
+
+		 	    });
+
+		 	    return false;
+
+  	       }
+
+        });
+
+}
+
+
+
+function SetAjaxLoginError(ErrorText)
+
+{
+
+    $('login_error_msg').innerHTML=ErrorText; 
+
+    $('login_error_msg').show(); 
+
+    Windows.focusedWindow.updateHeight(); 
+
+    new Effect.Shake(Windows.focusedWindow.getId());	
+
+}
+
+
+
+</script><!--page--><div id="div_page"><!--header--><div id="div_header"><div class="div_logo"><a href="/"><img src="http://static.smokoo.co.za//images/logo.gif" alt="" border="0" /></a></div><div class="div_header_pic" style="right: 0; margin-top: 0px;"><a href='contact-us.html'><img src='http://www.smokoo.co.za/images/live-support.jpg' alt='live Chat' border ='0'></a></div><div class="div_header_pic" style="text-align: right;"><iframe src="http://www.facebook.com/plugins/like.php?href=www.smokoo.co.za&layout=standard&show_faces=false&width=450&action=like&font=arial&colorscheme=light&height=35" [^] scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe></div></div><!--menu--><!--menu--><div id="div_menu"><div style="position: absolute; margin: 48px 0 0 6px; z-index: 300"> 
+<div  onmouseover="ShowTopMenu('auction_cats_top_menu');" onmouseout="HideTopMenu('auction_cats_top_menu');" style="z-index: 100;"><div class="div-select-item"><span>Select Auction Category</span></div><div id="auction_cats_top_menu" class="auction-cats" style="display: none"><ul><span onclick="location.href='/'">Electronics</span><li onclick="location.href='/live_auctions.php?cat_id=33'" ><span>Cameras & Photos</span></li><li onclick="location.href='/live_auctions.php?cat_id=48'" ><span>iPods, MP3 & Audio</span></li><li onclick="location.href='/live_auctions.php?cat_id=49'" ><span>Laptops & Notebooks</span></li><li onclick="location.href='/live_auctions.php?cat_id=51'" ><span>Mobiles & Telephones</span></li><li onclick="location.href='/live_auctions.php?cat_id=55'" ><span>TV & Video</span></li></ul><ul><span onclick="location.href='/'">Entertainment</span><li onclick="location.href='/live_auctions.php?cat_id=67'" ><span>Cars</span></li><li onclick="location.href='/live_auctions.php?cat_id=59'" ><span>Health & Beauty</span></li><li onclick="location.href='/live_auctions.php?cat_id=60'" ><span>House & Garden</span></li><li onclick="location.href='/live_auctions.php?cat_id=61'" ><span>Lifestyle Products</span></li><li onclick="location.href='/live_auctions.php?cat_id=63'" ><span>Vouchers</span></li></ul><ul class="addon-item" onclick="location.href='/closed_auctions.php'"><span>Closed auctions</span></ul><ul class="addon-item" onclick="location.href='/upcoming_auctions.php'"><span>Upcoming auctions</span></ul><div style="height: 18px; background: transparent;">&nbsp;</div></div></div> 
+<script type="text/javascript" > 
+ 
+var final_hide_menu = true;
+ 
+function ShowTopMenu(menu_id) {
+    document.getElementById(menu_id).style.display = 'block';
+    final_hide_menu = false;
+}
+ 
+function HideTopMenu(menu_id) {
+	final_hide_menu = true;
+    setTimeout("FinalHideMenu('"+menu_id+"')", 1000);
+}
+ 
+function FinalHideMenu(menu_id) {
+    if(final_hide_menu) {
+        document.getElementById(menu_id).style.display = 'none';
+    }
+}
+</script> 
+&nbsp;</div><div class="div_menu_left"><img src="http://static.smokoo.co.za//images/img_menu_left.jpg" alt="" /></div><div class="div_menu_content"><div class="div_menu_content_item"><a href="/">Home</a></div><div class="div_menu_content_vl"><img src="http://static.smokoo.co.za//images/img_menu_vl.jpg" alt="" /></div><div class="div_menu_content_item"><a href="/how-it-works.html">How it works</a></div><div class="div_menu_content_vl"><img src="http://static.smokoo.co.za//images/img_menu_vl.jpg" alt="" /></div><div class="div_menu_content_item"><a href="/easyview.php">Easy View</a></div><div class="div_menu_content_vl"><img src="http://static.smokoo.co.za//images/img_menu_vl.jpg" alt="" /></div><div class="div_menu_content_item"><a href="/closed_auctions.php">Closed auctions</a></div><div class="div_menu_content_vl"><img src="http://static.smokoo.co.za//images/img_menu_vl.jpg" alt="" /></div><div class="div_menu_content_item"><a href="/Help-for-Newcomers.html">Help</a></div><div class="div_menu_content_vl"><img src="http://static.smokoo.co.za//images/img_menu_vl.jpg" alt="" /></div><div class="div_menu_content_item"><a href="/modify_user.php">Register</a></div></div><!--reg--><div class="div_reg"><form action="/login.php" method="post" id="user_sign_in" style="margin: 0; padding: 0;"><div class="div_reg_text">Login</div><div class="div_reg_input"><input class="input_reg" name="email" type="text"  value="Your email" onfocus="if(this.value=='Your email')this.value='';" /></div><div class="div_reg_input"><input class="input_reg" name="pwd" type="password" value="******" onfocus="if(this.value=='******')this.value='';"/></div><div class="div_reg_button"><input type="image" src="http://static.smokoo.co.za//images/button_log.jpg" alt="" border="0" /></a></div><div class="div_reg_link"><a href="/password.php">Forgot Password?</a></div><div class="div_reg_link">|</div><div class="div_reg_link"><a href="/modify_user.php">Sign Up Now</a></div></form></div><!--//reg--><div class="div_menu_right"><img src="http://static.smokoo.co.za//images/img_menu_right.jpg" alt="" /></div></div><!--//menu--><!--//menu--><!--categories--><!--//categories--><!--header--><!--center--><div id="div_center"><div class="div_left"><div class="div_box2"><div class="div_box2_name">Closed auctions </div><!--line--><div class="div_box2_line"><div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctioitunesg_f5ca37">iTunes Gift card</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Bronze Auction"><img src="http://static.smokoo.co.za//images/icons/ico_bronze.png" alt="" border="0"  /></div><div class="div_line_ico" ><img src="http://static.smokoo.co.za//images/ico_7.gif" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctioitunesg_f5ca37"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/iTunesgiftcard25.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>200.00</strong></div><div class="div_box2_item_time" id="timeleft_9770">Finished</div><div class="div_box2_item_price_all" id="auction_9770"><span>R</span>0.90</div><div class="div_box2_item_user" id="username_9770">PostmanPat89</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.55%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctionipodtouch1_e5e069">New iPod Touch 32GB</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="120% off"><img src="http://static.smokoo.co.za//images/icons/ico_120.png" alt="" border="0"  /></div><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctionipodtouch1_e5e069"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/ipodtouch_3.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>2,999.00</strong></div><div class="div_box2_item_time" id="timeleft_9773">Finished</div><div class="div_box2_item_price_all" id="auction_9773"><span>R</span>60.70</div><div class="div_box2_item_user" id="username_9773">Quazi1308</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>97.98%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctionipad64gb_3gwifi_2_84dc47">iPad 64GB wifi 3G</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctionipad64gb_3gwifi_2_84dc47"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/ipad_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>11,000.00</strong></div><div class="div_box2_item_time" id="timeleft_9678">Finished</div><div class="div_box2_item_price_all" id="auction_9678"><span>R</span>123.85</div><div class="div_box2_item_user" id="username_9678">ATM777</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>98.87%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooporschedesig_064940">PorscheDesign Kettle</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Bronze Auction"><img src="http://static.smokoo.co.za//images/icons/ico_bronze.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooporschedesig_064940"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/kettle-tw911p2_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>1,499.00</strong></div><div class="div_box2_item_time" id="timeleft_9702">Finished</div><div class="div_box2_item_price_all" id="auction_9702"><span>R</span>0.55</div><div class="div_box2_item_user" id="username_9702">iwantit</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.96%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+</div><div class="div_box2_line"><div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooarchos101intern_50403e">ARCHOS 10.1" tablet</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooarchos101intern_50403e"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/Archos_101_internet_tablet_3_view.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>6,754.00</strong></div><div class="div_box2_item_time" id="timeleft_9701">Finished</div><div class="div_box2_item_price_all" id="auction_9701"><span>R</span>108.75</div><div class="div_box2_item_user" id="username_9701">Mave123</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>98.39%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctioncasioexilim_1_1dd587">Casio Exilim EX-G1</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctioncasioexilim_1_1dd587"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/exilim_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>3,999.00</strong></div><div class="div_box2_item_time" id="timeleft_9677">Finished</div><div class="div_box2_item_price_all" id="auction_9677"><span>R</span>16.10</div><div class="div_box2_item_user" id="username_9677">sean1092</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.6%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauction_sonyledbraviakdl_40ex600_2_041301">BRAVIA LED KDL EX600</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauction_sonyledbraviakdl_40ex600_2_041301"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/KDL-40NX700_5.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>14,999.90</strong></div><div class="div_box2_item_time" id="timeleft_9685">Finished</div><div class="div_box2_item_price_all" id="auction_9685"><span>R</span>72.25</div><div class="div_box2_item_user" id="username_9685">ajgrey</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.52%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctionglob_ef3053">GlobalKnife 6 knives</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctionglob_ef3053"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/globalKnifeBlockSet_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>4,380.00</strong></div><div class="div_box2_item_time" id="timeleft_9699">Finished</div><div class="div_box2_item_price_all" id="auction_9699"><span>R</span>147.95</div><div class="div_box2_item_user" id="username_9699">ajgrey</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>96.62%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+</div><div class="div_box2_line"><div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/ipod-nano-6th-gen_2_74975e">New iPod nano 16GB</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Buy now"><img src="http://static.smokoo.co.za//images/icons/ico_4.png" alt="" border="0"  /></div><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/ipod-nano-6th-gen_2_74975e"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/iPod-6thGeneration_5.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>1,999.00</strong></div><div class="div_box2_item_time" id="timeleft_9700">Finished</div><div class="div_box2_item_price_all" id="auction_9700"><span>R</span>82.05</div><div class="div_box2_item_user" id="username_9700">Willeman.</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>95.9%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctioitunesg_3eb569">iTunes Gift card</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Bronze Auction"><img src="http://static.smokoo.co.za//images/icons/ico_bronze.png" alt="" border="0"  /></div><div class="div_line_ico" ><img src="http://static.smokoo.co.za//images/ico_7.gif" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctioitunesg_3eb569"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/iTunesgiftcard25.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>200.00</strong></div><div class="div_box2_item_time" id="timeleft_9683">Finished</div><div class="div_box2_item_price_all" id="auction_9683"><span>R</span>2.05</div><div class="div_box2_item_user" id="username_9683">SweetPea</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>98.98%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokoo_sonynex5k_with_18-5_a03359">Sony Camera NEX-5K</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokoo_sonynex5k_with_18-5_a03359"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/nex-5_2.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>8,999.00</strong></div><div class="div_box2_item_time" id="timeleft_9696">Finished</div><div class="div_box2_item_price_all" id="auction_9696"><span>R</span>225.30</div><div class="div_box2_item_user" id="username_9696">tang</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>97.5%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctionipad64gb_3gwifi_2_f91cc1">iPad 64GB wifi 3G</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctionipad64gb_3gwifi_2_f91cc1"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/ipad_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>11,000.00</strong></div><div class="div_box2_item_time" id="timeleft_9690">Finished</div><div class="div_box2_item_price_all" id="auction_9690"><span>R</span>1,015.60</div><div class="div_box2_item_user" id="username_9690">RobTheBrue</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>90.77%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+</div><div class="div_box2_line"><div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauction_iphone4_32gb_2_057bdb">iPhone 4 32 GB</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauction_iphone4_32gb_2_057bdb"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/iphone4_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>9,200.00</strong></div><div class="div_box2_item_time" id="timeleft_9676">Finished</div><div class="div_box2_item_price_all" id="auction_9676"><span>R</span>34.05</div><div class="div_box2_item_user" id="username_9676">PhatCatt</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.63%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokoofujifilm_finepix_3d_digital_3bfd39">Fujifilm 3D Camera</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokoofujifilm_finepix_3d_digital_3bfd39"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/Fujifilm_3D_Camera_Front.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>6,746.00</strong></div><div class="div_box2_item_time" id="timeleft_9697">Finished</div><div class="div_box2_item_price_all" id="auction_9697"><span>R</span>8.95</div><div class="div_box2_item_user" id="username_9697">PhatCatt</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.87%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctioncallawag_318550">Callaway RAZR X set</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctioncallawag_318550"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/CallawayRAZR_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>7,999.00</strong></div><div class="div_box2_item_time" id="timeleft_9686">Finished</div><div class="div_box2_item_price_all" id="auction_9686"><span>R</span>55.30</div><div class="div_box2_item_user" id="username_9686">geoff06sa</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.31%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctiontefaljamieoliverprofessionalset_2_f2843b">TEFAL J.OLIVER9p set</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctiontefaljamieoliverprofessionalset_2_f2843b"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/jamieOliverstainlesssteel9piece_3.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>2,420.00</strong></div><div class="div_box2_item_time" id="timeleft_9695">Finished</div><div class="div_box2_item_price_all" id="auction_9695"><span>R</span>84.30</div><div class="div_box2_item_user" id="username_9695">ajgrey</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>96.52%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+</div><div class="div_box2_line"><div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooauctioitunesg_11ed42">iTunes Gift card</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Bronze Auction"><img src="http://static.smokoo.co.za//images/icons/ico_bronze.png" alt="" border="0"  /></div><div class="div_line_ico" ><img src="http://static.smokoo.co.za//images/ico_7.gif" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooauctioitunesg_11ed42"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/iTunesgiftcard25.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>200.00</strong></div><div class="div_box2_item_time" id="timeleft_9682">Finished</div><div class="div_box2_item_price_all" id="auction_9682"><span>R</span>0.50</div><div class="div_box2_item_user" id="username_9682">555wrcsti</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.75%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooporschecoffe_57f93e">SiemensPorscheDesign</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Bronze Auction"><img src="http://static.smokoo.co.za//images/icons/ico_bronze.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooporschecoffe_57f93e"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/coffeeMachine-tc911p2_1.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>2,199.00</strong></div><div class="div_box2_item_time" id="timeleft_9694">Finished</div><div class="div_box2_item_price_all" id="auction_9694"><span>R</span>1.30</div><div class="div_box2_item_user" id="username_9694">tang</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.94%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokooarchos101intern_d6fb0e">ARCHOS 10.1" tablet</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Gold Auction"><img src="http://static.smokoo.co.za//images/icons/ico_gold.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokooarchos101intern_d6fb0e"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/Archos_101_internet_tablet_3_view.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>6,754.00</strong></div><div class="div_box2_item_time" id="timeleft_9693">Finished</div><div class="div_box2_item_price_all" id="auction_9693"><span>R</span>23.00</div><div class="div_box2_item_user" id="username_9693">gavinpenkin</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.66%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+<div class="div_box2_item"><div class="div-img-sold-item"><img alt="" src="http://static.smokoo.co.za//images/img_sold.png" border="0" width="100" /></div><div class="div_box2_item_name"><a href="/auctions/smokoostudio_headphones_beats_by_drdre_by__501b6e">Beats by Dr. Dre</a></div><div class="icons-container-vertical">
+
+<div class="auction-icons"><div class="div_line_ico" title="Silver Auction"><img src="http://static.smokoo.co.za//images/icons/ico_silver.png" alt="" border="0"  /></div><div class="div_line_ico"> </div></div>
+</div><div class="div_box2_item_box"><div class="div_box2_item_pic"><a href="/auctions/smokoostudio_headphones_beats_by_drdre_by__501b6e"><img src="http://static.smokoo.co.za//data/images/auctions/thumbnails/Beats_headphone_DRDRE.jpg" alt="" border="0" /></a> </div><div class="div_box2_item_price">Retail Price <br /> <strong style="text-decoration: line-through;"><span>R</span>4,193.00</strong></div><div class="div_box2_item_time" id="timeleft_9692">Finished</div><div class="div_box2_item_price_all" id="auction_9692"><span>R</span>39.90</div><div class="div_box2_item_user" id="username_9692">hemi300c</div><div class="div_box2_item_button" style="color:#3A782C; font-size: 14px; font-weight: bold;"> Saved<br>99.05%!</div><img src="http://static.smokoo.co.za//images/remind_me_red.png" style="cursor: pointer;" onclick="alert('You need to be registered to use this function.');"/><div class="div_box2_item_buy">&nbsp;</div><div class="div_box2_item_"></div></div><div class="div_box2_item_bot"><img src="http://static.smokoo.co.za//images/pic_item_bot.jpg" alt="" /></div></div> 
+</div><br style="clear: both"><p style='padding-left: 10px;'><span class='link-chain-link-selected'>1</span> <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=2'">2</a> <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=3'">3</a> <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=4'">4</a> <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=5'">5</a> <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=6'">6</a>  ... <a class='link-chain-link' href='javascript:void(0)' onfocus='this.blur();' onclick="document.location='closed_auctions.php?from=30'">30</a> </p><div class="div_box2_bot"><img src="images/bg_b2_bot.gif" alt="" /> </div></div></div><div id="div_right"><div class="div_bunner"><a href="/how-it-works.html"> <img src="http://static.smokoo.co.za//images/bunner_1.jpg" alt="" border="0" /></a></div><div class="div_bunner"><img src="http://static.smokoo.co.za//images/bunner_2.jpg" alt="" border="0" usemap="#Map2" /> <map name="Map2" id="Map2"><area alt="" shape="rect" coords="11,284,163,321" href="/how-it-works.html" /></map></div><p><style type="text/css">
+
+<!--
+
+.style1 {
+
+	font-size: 10px
+
+}
+
+.style3 {font-size: 10px; font-weight: bold; }
+
+--></style></p>
+
+<div class="div_box4">
+
+<div style="text-align: left" class="div_box4_name">&nbsp;&nbsp;&nbsp; Smokoo Hot Tips</div>
+
+<div class="div_box4_content">
+
+<div class="div_box4_content_line">
+
+<div style="width: 132px; height: 940px" class="div_box4_content_line_text1">
+
+<h6 style="text-align: justify"><strong><span style="font-family: Arial"><span style="font-size: 10px">The most important tip we have is to be patient. Take time to observe both auction and competition!</span></span></strong></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">If you haven&rsquo;t already &ndash; have a read through &ldquo;A User Guide to Smokoo&rdquo;</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">Waiting until the last seconds to bid in an auction will drastically increase your ability to secure an auction!</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">The AutoBidder used strategically can be used to &ldquo;scare off&rdquo; competing bidders. The AutoBidder is great when you still want to participate in an auction but can&rsquo;t be at your PC to monitor it constantly.</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">Try and avoid having to top-up your credits during an auction by ensuring that you have enough credits&nbsp;before joining the auction action!</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">When starting out and developing your own bidding strategy &ndash; try BidPackage auctions to boost your credits balance.</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">Less costly items tend to have slightly less interest and fewer competition &ndash; these auctions can usually be secured for fewer bids.</span></h6>
+
+<hr />
+
+<h6 style="text-align: justify" class="style3"><span style="font-family: Arial">To see details of more than one auction = use the &quot;Open in New Window&quot; option and refresh the Home Page from time to time to see all active and current auctions.</span></h6>
+
+</div>
+
+</div>
+
+<div style="text-align: left" class="div_box4_bot style1"><img alt="" src="/images/img_box4_bot.jpg" /></div>
+
+</div>
+
+<p style="text-align: left" class="style1">&nbsp;</p>
+
+</div>
+
+<p class="style1">&nbsp;</p><!--box 4--><div class="div_box4">
+
+<div class="div_box4_name">Auction extras</div>
+
+<div class="div_box4_content">
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" src="/images/pico_1.gif" /></div>
+
+<div class="div_box4_content_line_text1"><a href="/a-user-guide-to-smokoo.html">Rookie auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" width="25" height="26" src="/images/pico_2.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Variable Price<br />
+
+Increments </a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" src="/images/pico_3.gif" /></div>
+
+<div style="width: 112px; height: 35px" class="div_box4_content_line_text1">
+
+<div style="margin: 0cm 0cm 10pt">
+
+<div style="margin: 0cm 0cm 10pt">
+
+<div style="margin: 0cm 0cm 10pt"><a href="/a-user-guide-to-smokoo.html">Fast and Furious Auction</a></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" src="/images/pico_4.gif" /></div>
+
+<div class="div_box4_content_line_text1"><a href="/a-user-guide-to-smokoo.html">Buy Now</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" src="/images/pico_5.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">100% off for the winner</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" src="/images/pico_6.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Bid vouchers auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img style="width: 24px; height: 26px" alt="" width="27" height="27" src="/images/ico_7.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Convert to Bids</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img style="width: 29px; height: 29px" alt="" width="26" height="29" src="/images/ico_8.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Gold Auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img style="width: 28px; height: 28px" alt="" width="22" height="28" src="/images/ico_9.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Bronze Auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img style="width: 27px; height: 28px" alt="" width="25" height="30" src="/images/ico_10.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Silver Auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img style="width: 24px; height: 25px" alt="" width="24" height="29" src="/images/ico_11.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">120% Guaranteed Auction</a></div>
+
+</div>
+
+<div class="div_box4_content_line">
+
+<div class="div_box4_content_line_pic"><img alt="" width="25" height="25" src="/images/ico_12.gif" /></div>
+
+<div class="div_box4_content_line_text2"><a href="/a-user-guide-to-smokoo.html">Variable Credits Auction</a></div>
+
+</div>
+
+<div class="div_box4_button"><a href="/a-user-guide-to-smokoo.html"><img border="0" alt="" src="/images/button_more.jpg" /></a></div>
+
+</div>
+
+<div class="div_box4_bot"><img alt="" src="/images/img_box4_bot.jpg" /></div>
+
+</div>
+
+<p>&nbsp;</p><!--box 4--><p><a target="_blank" href="http://www.smokoo.co.za/smokoo-winners.html"><img border="0" alt="" src="http://www.smokoo.co.za/images/smokoowinners.jpg" /></a></p>
+
+<p><a target="_blank" href="http://www.facebook.com/pages/Smokoo-South-Africa/124413780935745?v=wall&ref=mf"><img border="0" alt="" src="http://www.smokoo.co.za/images/like-smokoo-facebook.jpg" /></a>
+
+</p>
+
+</div></div><!--center--><!--footer--><!--footer--><div id="div_footer"><div class="div_footer_top"><img src="http://static.smokoo.co.za//images/footer_top.jpg" alt="" /></div><div class="div_footer_content"><table class="table_footer" cellpadding="0" cellspacing="0" border="0"><tr><td><a href="/terms-and-conditions.html">Terms and Conditions</a></td><td>|</td><td><a href="/about-us.html">About us</a></td><td>|</td><td><a href="/contact-us.html">Contact</a></td><td>|</td><td><a href="/privacy-policy.html">Privacy</a></td><td>|</td><td><a href="/Help-for-Newcomers.html">Help</a></td><td>|</td><td><a href="/a-user-guide-to-smokoo.html">A Users Guide to Smokoo</a></td><td>|</td><td><a href="/What-is-Smokoo.html">What is Smokoo?</a></td><td>|</td><td><a href="/smokoo-winners.html">Smokoo Winners</a></td></tr></table><div class="div_footer_copy">� 2010 SMOKOO SHOP PTY Ltd / Registration number 2009/007129/07.</div><table class="table_footer_pay" cellpadding="0" cellspacing="0" border="0"><tr><td rowspan="2"><a href="http://www.smokoo.co.za/buy_credits.php"><img src="http://www.smokoo.co.za/images/payfast.jpg" width="125" height="70" border="0" /></a></td><td rowspan="2"><img src="http://www.smokoo.co.za/images/pay14.jpg" width="73" height="73" /></td><td width="71" rowspan="2"><img src="http://static.smokoo.co.za//images/pay5.png" width="71" height="86" border="0" usemap="#Map" /></td><td width="86" colspan="2"><a href="http://www.smokoo.co.za/buy_credits.php" target="_self"><img src="http://static.smokoo.co.za//images/pay6.png" width="86" height="30" border="0" /></a></td><td width="67"><a href="http://www.smokoo.co.za/how_does_SID_work.html"><img src="http://static.smokoo.co.za//images/pay8.png" width="67" height="33" border="0" /></a></td><td width="41">&nbsp;</td><td width="10" rowspan="2"><a href="http://www.thawte.com" target="_self"><img src="http://static.smokoo.co.za//images/pay11.png" width="112" height="72" border="0" /></a></td></tr><tr><td><img src="http://static.smokoo.co.za//images/pay13.jpg" width="80" height="47" /></td><td><img src="http://static.smokoo.co.za//images/pay15.jpg" width="84" height="47" /></td><td colspan="2"><a href="http://www.vcs.co.za" target="_self"><img src="http://static.smokoo.co.za//images/pay10.png" width="108" height="52" border="0" /></a></td></tr></table></div><div class="div_footer_bot"><img src="http://static.smokoo.co.za//images/footer_bot.jpg" alt="" /></div></div><!--//footer-->
+
+
+
+<map name="Map" id="Map">
+
+<area shape="rect" coords="-10,-15,71,31" href="http://www.smokoo.co.za/verified-by-visa.html" target="_self" />
+
+<area shape="rect" coords="2,34,71,57" href="http://www.smokoo.co.za/masterCard-Secure-code.html" target="_self" />
+
+<area shape="rect" coords="1,57,33,95" href="http://www.visa.com" target="_self" />
+
+<area shape="rect" coords="34,57,70,89" href="http://www.mastercard.com" target="_self" />
+
+</map><!--//footer--><div class="div_hl"><img src="http://static.smokoo.co.za//images/tr_bg.gif" alt="" height="52" /></div></div><!--//page--> 
+<!--google analytics--> 
+<script type="text/javascript"> 
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script> 
+<script type="text/javascript"> 
+try{
+var pageTracker = _gat._getTracker("UA-16995628-1");
+pageTracker._setAllowLinker(true);
+pageTracker._setDomainName("none");
+pageTracker._setAllowHash(false);
+pageTracker._trackPageview();
+} catch(err) {}</script> 
+ 
+ 
+<!-- BEGIN LivePerson Monitor. --><script language='javascript'> var lpMTagConfig = {'lpServer' : "server.iad.liveperson.net",'lpNumber' : "76013948",'lpProtocol' : (document.location.toString().indexOf('https:')==0) ? 'https' : 'http'}; function lpAddMonitorTag(src){if(typeof(src)=='undefined'||typeof(src)=='object'){src=lpMTagConfig.lpMTagSrc?lpMTagConfig.lpMTagSrc:'/hcp/html/mTag.js';}if(src.indexOf('http')!=0){src=lpMTagConfig.lpProtocol+"://"+lpMTagConfig.lpServer+src+'?site='+lpMTagConfig.lpNumber;}else{if(src.indexOf('site=')<0){if(src.indexOf('?')<0)src=src+'?';else src=src+'&';src=src+'site='+lpMTagConfig.lpNumber;}};var s=document.createElement('script');s.setAttribute('type','text/javascript');s.setAttribute('charset','iso-8859-1');s.setAttribute('src',src);document.getElementsByTagName('head').item(0).appendChild(s);} if (window.attachEvent) window.attachEvent('onload',lpAddMonitorTag); else window.addEventListener("load",lpAddMonitorTag,false);</script><!-- END LivePerson Monitor. --> 
+</body> 
+</html>

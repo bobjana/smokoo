@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_za_co_zynafin_smokoo_BidHistory" items="${bidhistorys}" z="/cB/b8dPvmxpRghSoRgwfZyKarw=">
+        <table:table data="${bidhistorys}" id="l_za_co_zynafin_smokoo_BidHistory" path="/bidhistorys" z="7Gz1q9jKZzBhs2UFiuOupBg8lPo=">
+            <table:column id="c_za_co_zynafin_smokoo_BidHistory_date" property="date" z="f3Y+tTsIKwDOJr6x5l7z7cZLNU0="/>
+            <table:column id="c_za_co_zynafin_smokoo_BidHistory_user" property="user" z="PF5EkOjxTJD+q2PJKAO52c2O7bQ="/>
+            <table:column id="c_za_co_zynafin_smokoo_BidHistory_ammount" property="ammount" z="4LsDLxCzSIMv5cFUisW+WlXV+Y4="/>
+            <table:column id="c_za_co_zynafin_smokoo_BidHistory_type" property="type" z="WsoVStxBtH/P+omRZnCG22g9bs8="/>
+        </table:table>
+    </page:list>
+</div>
