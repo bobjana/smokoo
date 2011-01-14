@@ -10,19 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
+import za.co.zynafin.smokoo.auction.AuctionClosedException;
 
 @Component
-public class BidHistoryExecutor {
+public class BiddingRecorderJob {
 
-	private static final Logger log = Logger.getLogger(BidHistoryExecutor.class);
+	private static final Logger log = Logger.getLogger(BiddingRecorderJob.class);
 	
 	private Map<Auction,TimerTask> executions = new HashMap<Auction, TimerTask>();
-	private BidHistoryRecorder bidHistoryRecorder;
+	private BiddingRecorder bidHistoryRecorder;
 	private Timer timer = new Timer();
 	private static final long DEFAULT_DELAY = 20000; //20 seconds
 	
 	@Autowired
-	public void setBidHistoryRecorder(BidHistoryRecorder bidHistoryRecorder) {
+	public void setBidHistoryRecorder(BiddingRecorder bidHistoryRecorder) {
 		this.bidHistoryRecorder = bidHistoryRecorder;
 	}
 
@@ -57,7 +58,7 @@ public class BidHistoryExecutor {
 			try {
 				bidHistoryRecorder.record(auction);
 			} catch (AuctionClosedException e) {
-				log.info(String.format("Auction '%s' has been closed, removing task from executor",auction.getAuctionTitle()));
+				log.info(String.format("Auction '%s' has been closed, removing frp, bidding recorder",auction.getAuctionTitle()));
 				stopExecution(auction);
 			}
 		}

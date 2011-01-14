@@ -10,19 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
-import za.co.zynafin.smokoo.history.BidHistoryExecutor;
+import za.co.zynafin.smokoo.history.BiddingRecorderJob;
 
 /**
  *	Starts the bids history recording for auctions that are about to become active. 
  */
 @Component
-public class OpenedAuctionMonitorJob extends TimerTask{
+public class AuctionMonitorJob extends TimerTask{
 
-	private static final Logger log = Logger.getLogger(OpenedAuctionMonitorJob.class);
+	private static final Logger log = Logger.getLogger(AuctionMonitorJob.class);
 
 	private AuctionService auctionService;
-	private BidHistoryExecutor bidHistoryExecutor;
-	private int timeBuffer = 10*1000*60; //10 minutes default
+	private BiddingRecorderJob biddingRecorderJob;
+	private int timeBuffer = 5*1000*60; //5 minutes default
 	
 	public void setTimeBuffer(int timeBuffer) {
 		this.timeBuffer = timeBuffer;
@@ -32,21 +32,21 @@ public class OpenedAuctionMonitorJob extends TimerTask{
 	public void setAuctionService(AuctionService auctionService) {
 		this.auctionService = auctionService;
 	}
-	
+
 	@Autowired
-	public void setBidHistoryExecutor(BidHistoryExecutor bidHistoryExecutor) {
-		this.bidHistoryExecutor = bidHistoryExecutor;
+	public void setBiddingRecorderJob(BiddingRecorderJob biddingRecorderJob) {
+		this.biddingRecorderJob = biddingRecorderJob;
 	}
 
 	@Override
 	public void run() {
-		log.info("Starting open auction monitor job...");
+		log.info("Starting auction monitor job...");
 		List<Auction> openAuctions = auctionService.listOpenAuctions();
 		Date nextStartTime = determineNextStartTime(); 
 		for (Auction auction : openAuctions){
-			if (auction.getDate() != null && auction.getDate().before(nextStartTime) && !bidHistoryExecutor.isExecuting(auction)){
-					log.info(String.format("Auction '%s' ready for bid history gathering",auction.getAuctionTitle()));
-					bidHistoryExecutor.startExecution(auction);
+			if (auction.getDate() != null && auction.getDate().before(nextStartTime) && !biddingRecorderJob.isExecuting(auction)){
+					log.info(String.format("Getting ready to record bids for auction '%s'...",auction.getAuctionTitle()));
+					biddingRecorderJob.startExecution(auction);
 			}
 		}
 	}
@@ -54,6 +54,5 @@ public class OpenedAuctionMonitorJob extends TimerTask{
 	private Date determineNextStartTime() {
 		return DateUtils.addMilliseconds(new Date(), timeBuffer);
 	}
-	
 
 }

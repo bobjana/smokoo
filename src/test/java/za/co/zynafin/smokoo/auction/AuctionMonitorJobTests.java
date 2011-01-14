@@ -10,15 +10,15 @@ import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 
 import za.co.zynafin.smokoo.Auction;
-import za.co.zynafin.smokoo.history.BidHistoryExecutor;
+import za.co.zynafin.smokoo.history.BiddingRecorderJob;
 
 
-public class OpenedAuctionMonitorJobTests {
+public class AuctionMonitorJobTests {
 
 	@Test
 	public void run() throws Exception {
 		//GIVEN
-		OpenedAuctionMonitorJob monitorJob = new OpenedAuctionMonitorJob();
+		AuctionMonitorJob monitorJob = new AuctionMonitorJob();
 		monitorJob.setTimeBuffer(5000);
 
 		List<Auction> testAuctions = new ArrayList<Auction>();
@@ -30,8 +30,8 @@ public class OpenedAuctionMonitorJobTests {
 		when(auctionService.listOpenAuctions()).thenReturn(testAuctions);
 		monitorJob.setAuctionService(auctionService);
 
-		BidHistoryExecutor bidHistoryExecutor = mock(BidHistoryExecutor.class);
-		monitorJob.setBidHistoryExecutor(bidHistoryExecutor);
+		BiddingRecorderJob bidHistoryExecutor = mock(BiddingRecorderJob.class);
+		monitorJob.setBidHistoryRecorderJob(bidHistoryExecutor);
 		//WHEN
 		monitorJob.run();
 		Thread.sleep(1000);

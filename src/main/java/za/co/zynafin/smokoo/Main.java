@@ -1,12 +1,11 @@
-package za.co.zynafin.smokoo.history;
+package za.co.zynafin.smokoo;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import za.co.zynafin.smokoo.Auction;
-import za.co.zynafin.smokoo.auction.AuctionRefreshJob;
+import za.co.zynafin.smokoo.auction.AuctionRetrievalJob;
 import za.co.zynafin.smokoo.auction.AuctionService;
-import za.co.zynafin.smokoo.auction.CloseAuctionJob;
+import za.co.zynafin.smokoo.auction.AuctionCloser;
 
 public class Main {
 

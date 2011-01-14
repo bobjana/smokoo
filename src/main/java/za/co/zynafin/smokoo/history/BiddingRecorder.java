@@ -14,24 +14,27 @@ import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
 import za.co.zynafin.smokoo.Bid;
+import za.co.zynafin.smokoo.auction.AuctionClosedException;
+import za.co.zynafin.smokoo.bid.BidParser;
+import za.co.zynafin.smokoo.bid.BidService;
 
 @Component
-public class BidHistoryRecorder {
+public class BiddingRecorder {
 
-	private static final Logger log = Logger.getLogger(BidHistoryRecorder.class);
+	private static final Logger log = Logger.getLogger(BiddingRecorder.class);
 
-	private BidHistoryParser bidHistoryParser;
-	private BidHistoryService bidHistoryService;
+	private BidParser bidParser;
+	private BidService bidHistoryService;
 	private HttpClient httpClient;
 	private static final String BASE_URL = "http://www.smokoo.co.za/ajax_get_auction_bids.php?title=";
 
 	@Autowired
-	public void setBidHistoryParser(BidHistoryParser bidHistoryParser) {
-		this.bidHistoryParser = bidHistoryParser;
+	public void setBidParser(BidParser bidParser) {
+		this.bidParser = bidParser;
 	}
 
 	@Autowired
-	public void setBidHistoryService(BidHistoryService bidHistoryService) {
+	public void setBidHistoryService(BidService bidHistoryService) {
 		this.bidHistoryService = bidHistoryService;
 	}
 	
@@ -44,7 +47,7 @@ public class BidHistoryRecorder {
 		try {
 			log.debug("Start recording bids for auction - " + auction.getAuctionTitle());
 			String content = requestBidHistory(auction);
-			List<Bid> bids = bidHistoryParser.parse(content);
+			List<Bid> bids = bidParser.parse(content);
 			bidHistoryService.save(auction, bids);
 		} catch (ParseException e) {
 			throw new RuntimeException("Unable to record auction",e);

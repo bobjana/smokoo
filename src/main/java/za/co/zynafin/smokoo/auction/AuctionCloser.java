@@ -12,18 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
-import za.co.zynafin.smokoo.history.BidHistoryExecutor;
+import za.co.zynafin.smokoo.auction.parser.ClosedAuctionParser;
+import za.co.zynafin.smokoo.auction.parser.OpenAuctionParser;
+import za.co.zynafin.smokoo.history.BiddingRecorderJob;
 
 /**
  *	Closes auctions that might still be running on bid history executor and marks them as closed
  */
 @Component
-public class CloseAuctionJob extends TimerTask{
+public class AuctionCloser extends TimerTask{
 
-	private static final Logger log = Logger.getLogger(CloseAuctionJob.class);
+	private static final Logger log = Logger.getLogger(AuctionCloser.class);
 
 	private AuctionService auctionService;
-	private BidHistoryExecutor bidHistoryExecutor;
+	private BiddingRecorderJob bidHistoryExecutor;
 	private ClosedAuctionParser closedAuctionParser;
 	private OpenAuctionParser openAuctionParser;
 	private HttpClient httpClient = new HttpClient();
@@ -36,7 +38,7 @@ public class CloseAuctionJob extends TimerTask{
 	}
 	
 	@Autowired
-	public void setBidHistoryExecutor(BidHistoryExecutor bidHistoryExecutor) {
+	public void setBidHistoryExecutor(BiddingRecorderJob bidHistoryExecutor) {
 		this.bidHistoryExecutor = bidHistoryExecutor;
 	}
 	
@@ -52,7 +54,7 @@ public class CloseAuctionJob extends TimerTask{
 
 	@Override
 	public void run() {
-		log.info("Starting Closed auction monitor job...");
+		log.info("Closing auctions...");
 		List<Auction> openAuctions = auctionService.listOpenAuctions();
 		List<Auction> closedAuctions = closedAuctionParser.parse(requestAuctions(DEFAULT_CLOSED_URL));
 		List<Auction> auctions = (List<Auction>) CollectionUtils.intersection(openAuctions, closedAuctions);

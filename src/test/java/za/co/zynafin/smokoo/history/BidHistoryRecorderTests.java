@@ -17,21 +17,24 @@ import org.mockito.Mockito;
 
 import za.co.zynafin.smokoo.Auction;
 import za.co.zynafin.smokoo.Bid;
+import za.co.zynafin.smokoo.bid.BidParser;
+import za.co.zynafin.smokoo.bid.BidService;
+import za.co.zynafin.smokoo.history.BiddingRecorder;
 
 public class BidHistoryRecorderTests {
 
 	@Test
 	public void record() throws Exception {
 		// GIVEN
-		BidHistoryRecorder recorder = new BidHistoryRecorder();
+		BiddingRecorder recorder = new BiddingRecorder();
 		recorder.setHttpClient(getTestHttpClient());
 		Auction auction = new Auction();
-		BidHistoryService bidHistoryService = Mockito.mock(BidHistoryService.class);
+		BidService bidHistoryService = Mockito.mock(BidService.class);
 		recorder.setBidHistoryService(bidHistoryService);
-		BidHistoryParser parser = Mockito.mock(BidHistoryParser.class);
+		BidParser parser = Mockito.mock(BidParser.class);
 		List<Bid> mockBids = new ArrayList<Bid>();
 		Mockito.when(parser.parse(null)).thenReturn(mockBids);
-		recorder.setBidHistoryParser(parser);
+		recorder.setBidParser(parser);
 		// WHEN
 		recorder.record(auction);
 		// THEN

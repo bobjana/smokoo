@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<bean id="scheduledClosedAuctionMonitorJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
-		<property name="timerTask" ref="closedAuctionMonitorJob"/>
+	<bean id="_auctionCloser" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask" ref="auctionCloser"/>
 		<property name="period" value="300000"/> <!-- 5 minutes -->
 		<property name="delay" value="1000"></property>
 	</bean>
 
 	<!-- NOTE Scheduler delay < bufferedTime -->
-	<bean id="scheduledOpenAuctionMonitorJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
-		<property name="timerTask" ref="openedAuctionMonitorJob"/>
+	<bean id="_auctionMonitorJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask" ref="auctionMonitorJob"/>
 		<property name="period" value="360000"/> <!-- 9 minutes -->
 		<property name="delay" value="5000"></property>
 	</bean>
 
-	<bean id="scheduledAuctionRefreshJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
-		<property name="timerTask" ref="auctionRefreshJob"/>
+	<bean id="_auctionRetrievalJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask" ref="auctionRetrievalJob"/>
 		<property name="period" value="900000"/> <!-- 15 minutes -->
 		<property name="delay" value="7000"></property>
 	</bean>
@@ -23,9 +23,9 @@
 	<bean class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
-				<ref bean="scheduledAuctionRefreshJob"/>
-				<ref bean="scheduledOpenAuctionMonitorJob"/>
-				<ref bean="scheduledClosedAuctionMonitorJob"/>
+				<ref bean="_auctionCloser"/>
+				<ref bean="_auctionMonitorJob"/>
+				<ref bean="_auctionRetrievalJob"/>
 			</list>
 		</property>
 	</bean>

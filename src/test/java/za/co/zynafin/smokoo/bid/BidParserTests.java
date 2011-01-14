@@ -1,4 +1,4 @@
-package za.co.zynafin.smokoo.history;
+package za.co.zynafin.smokoo.bid;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,15 +12,16 @@ import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import za.co.zynafin.smokoo.Bid;
+import za.co.zynafin.smokoo.bid.BidParser;
 
-public class BidHistoryParserTests {
+public class BidParserTests {
 	//http://www.smokoo.co.za/ajax_get_auction_bids.php?title=smokooauctionipad64gb_3gwifi_2_f91cc1
 	@Test
 	public void parse() throws Exception {
 		//GIVEN
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 		String todaysDate = sdf.format(new Date()).substring(0,11);
-		BidHistoryParser parser = new BidHistoryParser();
+		BidParser parser = new BidParser();
 		File file = new DefaultResourceLoader().getResource("classpath:bid_history_output.txt").getFile();
 		String content = FileUtils.readFileToString(file);
 		//WHEN

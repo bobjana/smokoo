@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import za.co.zynafin.smokoo.Auction;
+import za.co.zynafin.smokoo.auction.parser.OpenAuctionParser;
 
 public class OpenAuctionParserTests {
 

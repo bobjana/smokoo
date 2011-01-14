@@ -1,4 +1,4 @@
-package za.co.zynafin.smokoo.auction;
+package za.co.zynafin.smokoo.auction.parser;
 
 import java.util.ArrayList;
 import java.util.List;

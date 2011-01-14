@@ -1,4 +1,4 @@
-package za.co.zynafin.smokoo.history;
+package za.co.zynafin.smokoo.bid;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import za.co.zynafin.smokoo.Bid;
 
 @Component
-public class BidHistoryParser {
+public class BidParser {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 	

@@ -1,4 +1,4 @@
-package za.co.zynafin.smokoo.history;
+package za.co.zynafin.smokoo.auction;
 
 public class AuctionClosedException extends Exception{
 

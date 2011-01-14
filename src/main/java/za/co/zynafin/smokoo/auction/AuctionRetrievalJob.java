@@ -11,15 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
+import za.co.zynafin.smokoo.auction.parser.OpenAuctionParser;
 
 /**
  * A scheduled job running periodically to refresh information about auctions
  *
  */
 @Component
-public class AuctionRefreshJob extends TimerTask{
+public class AuctionRetrievalJob extends TimerTask{
 
-	private static final Logger log = Logger.getLogger(AuctionRefreshJob.class);
+	private static final Logger log = Logger.getLogger(AuctionRetrievalJob.class);
 
 	private AuctionService auctionService;
 	private OpenAuctionParser auctionParser;
@@ -38,7 +39,7 @@ public class AuctionRefreshJob extends TimerTask{
 
 	@Override
 	public void run() {
-		log.info("Starting current active auction retrieval job...");
+		log.info("Starting auction retrieval job...");
 		String content = requestAuctionSummary();
 		List<Auction> auctions = auctionParser.parse(content);
 		auctionService.save(auctions);
