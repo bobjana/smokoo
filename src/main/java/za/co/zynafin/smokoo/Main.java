@@ -1,11 +1,12 @@
 package za.co.zynafin.smokoo;
 
+import java.util.Date;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import za.co.zynafin.smokoo.auction.AuctionRetrievalJob;
-import za.co.zynafin.smokoo.auction.AuctionService;
-import za.co.zynafin.smokoo.auction.AuctionCloser;
+import za.co.zynafin.smokoo.auction.TimeRemainingCalculator;
+import za.co.zynafin.smokoo.bid.BiddingManager;
 
 public class Main {
 
@@ -39,5 +40,24 @@ public class Main {
 //	ClosedAuctionMonitorJob janitorJob = context.getBean(ClosedAuctionMonitorJob.class);
 //	janitorJob.run();
 		
+		
+//		TimeRemainingCalculator calc = context.getBean(TimeRemainingCalculator.class);
+//		
+//		long gap = 500;
+//		while (true){
+//			long start = new Date().getTime();
+//			long time = calc.calculate(9724l);
+//			long dur = new Date().getTime() - start;
+//			System.out.println(time + " " + dur);
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		
+		BiddingManager biddingManager = context.getBean(BiddingManager.class);
+		biddingManager.bid(10769, 5);
 	}
 }

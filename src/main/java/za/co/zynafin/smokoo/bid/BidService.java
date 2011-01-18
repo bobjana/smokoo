@@ -42,5 +42,10 @@ public class BidService {
 			return false;
 		}
 	}
+	
+	public List<UserBidSummary> listTopBidders(long auctionId){
+		
+		return null;
+	}
 
 }

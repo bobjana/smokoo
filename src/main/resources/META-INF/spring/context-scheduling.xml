@@ -10,7 +10,7 @@
 	<!-- NOTE Scheduler delay < bufferedTime -->
 	<bean id="_auctionMonitorJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask" ref="auctionMonitorJob"/>
-		<property name="period" value="360000"/> <!-- 9 minutes -->
+		<property name="period" value="120000"/> <!-- 2 minutes -->
 		<property name="delay" value="5000"></property>
 	</bean>
 
