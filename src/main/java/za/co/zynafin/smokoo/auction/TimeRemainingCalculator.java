@@ -1,7 +1,5 @@
 package za.co.zynafin.smokoo.auction;
 
-import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;

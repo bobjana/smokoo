@@ -21,6 +21,7 @@
 				<hbox>
 					<groupbox mold="3d">
 						<caption label="Summary" />
+						<html id="summaryHtml"/>
 					</groupbox>
 					<groupbox mold="3d">
 						<caption label="Health" />
