@@ -1,0 +1,55 @@
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<window id="biddingView" use="za.co.zynafin.smokoo.web.BiddingCtrl">
+		<vbox>
+			<div width="100%">
+				<hbox>
+					<groupbox mold="3d">
+						<caption label="Auto Bidding" />
+						<hbox>
+							<button label="Enable" id="autoBidBtn"/>
+							<spinner id="maxNumberOfBidsSpinner" value="@{biddingManager.maxNumberOfBids}" width="50px"/>
+						</hbox>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Manual Bidding" />
+						<button label="Place Bid" id="manualBidBtn"/>
+					</groupbox>
+				</hbox>
+			</div>
+
+			<div>
+				<hbox>
+					<groupbox mold="3d">
+						<caption label="Summary" />
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Health" />
+					</groupbox>
+				</hbox>
+			</div>
+
+			<div>
+				<hbox>
+					<groupbox mold="3d" id="totalBidStatsGrpBox">
+						<caption label="Total Bids" />
+						<grid id="totalBidStats" >
+							<columns>
+								<column label="User" width="150px"/>
+								<column label="Count" width="100px"/>
+								<column label="Date" width="150px"/>
+							</columns>
+						</grid>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Last 10 Bids" />
+						<image id="last10BidsImg" />
+					</groupbox>
+				</hbox>
+			</div>
+		</vbox>
+
+	</window>
+</zk>
+
+
+

@@ -1,6 +1,10 @@
 package za.co.zynafin.smokoo;
 
 import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.roo.addon.entity.RooEntity;
@@ -21,6 +25,8 @@ public class Auction {
     private boolean closed;
 
     private double retailPrice;
+    
+    private boolean fastAndFurious;
 
 		@Override
 		public int hashCode() {
@@ -46,6 +52,13 @@ public class Auction {
 				return false;
 			return true;
 		}
+		
+    public static TypedQuery<Auction> findAuctionsByClosedAndDateNotNull(boolean closed) {
+      EntityManager em = Auction.entityManager();
+      TypedQuery<Auction> q = em.createQuery("SELECT Auction FROM Auction AS auction WHERE auction.closed = :closed and auction.date != null", Auction.class);
+      q.setParameter("closed", closed);
+      return q;
+  }
     
     
     

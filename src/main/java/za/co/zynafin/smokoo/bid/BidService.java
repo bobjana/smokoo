@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,13 @@ public class BidService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	private BidDao bidDao;
+	
+	@Autowired
+	public void setBidDao(BidDao bidDao) {
+		this.bidDao = bidDao;
+	}
 
 	@Transactional
 	public void save(Auction auction, List<Bid> bids) throws AuctionClosedException{
@@ -43,9 +51,8 @@ public class BidService {
 		}
 	}
 	
-	public List<UserBidSummary> listTopBidders(long auctionId){
-		
-		return null;
+	public List<UserBidSummary> listTopBidders(Auction auction){
+		return bidDao.listTopUserBids(auction.getAuctionId(), 5);
 	}
 
 }

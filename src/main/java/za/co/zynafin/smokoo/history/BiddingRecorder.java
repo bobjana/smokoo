@@ -41,7 +41,7 @@ public class BiddingRecorder {
 
 	public void record(Auction auction) throws AuctionClosedException {
 		try {
-			log.debug("Start recording bids for auction - " + auction.getAuctionTitle());
+			log.debug("Record bids for auction - " + auction.getAuctionTitle());
 			String content = requestBidHistory(auction);
 			List<Bid> bids = bidParser.parse(content);
 			bidHistoryService.save(auction, bids);

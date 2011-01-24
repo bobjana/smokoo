@@ -38,7 +38,7 @@ public class AuctionMonitorJobTests {
 		monitorJob.cancel();
 		//THEN
 		verify(auctionService).listOpenAuctions();
-		verify(bidHistoryExecutor).startExecution(auction2);
+		verify(bidHistoryExecutor).startRecording(auction2);
 	}
 
 	private Auction createTestAuction(String name,Date date) {

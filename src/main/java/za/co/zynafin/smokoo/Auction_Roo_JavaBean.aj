@@ -56,4 +56,12 @@ privileged aspect Auction_Roo_JavaBean {
         this.retailPrice = retailPrice;
     }
     
+    public boolean Auction.isFastAndFurious() {
+        return this.fastAndFurious;
+    }
+    
+    public void Auction.setFastAndFurious(boolean fastAndFurious) {
+        this.fastAndFurious = fastAndFurious;
+    }
+    
 }

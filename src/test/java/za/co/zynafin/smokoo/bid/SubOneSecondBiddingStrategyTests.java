@@ -14,7 +14,7 @@ public class SubOneSecondBiddingStrategyTests {
 	@Test
 	public void strategize() throws Exception {
 		//GIVEN
-		SubOneSecondBiddingStrategy biddingStrategy = new SubOneSecondBiddingStrategy();
+		SubSecondBiddingStrategy biddingStrategy = new SubSecondBiddingStrategy();
 		TimeRemainingCalculator timeRemainingCalculator = new TimeRemainingCalculatorStub(new Integer[]{8252,2310,950,650,8252,2310,950,650,8252,2310,950,650});
 		biddingStrategy.setTimeRemainingCalculator(timeRemainingCalculator);
 		

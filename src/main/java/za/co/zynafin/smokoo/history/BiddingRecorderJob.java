@@ -7,13 +7,15 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import za.co.zynafin.smokoo.Auction;
+import za.co.zynafin.smokoo.auction.AuctionClosedEvent;
 import za.co.zynafin.smokoo.auction.AuctionClosedException;
 
 @Component
-public class BiddingRecorderJob {
+public class BiddingRecorderJob implements ApplicationListener<AuctionClosedEvent>{
 
 	private static final Logger log = Logger.getLogger(BiddingRecorderJob.class);
 	
@@ -27,13 +29,13 @@ public class BiddingRecorderJob {
 		this.bidHistoryRecorder = bidHistoryRecorder;
 	}
 
-	public void startExecution(Auction auction){
+	public void startRecording(Auction auction){
 		RecordingTimerTask recordingTimerTask = new RecordingTimerTask(auction);
 		executions.put(auction, recordingTimerTask);
 		timer.schedule(recordingTimerTask, 0, DEFAULT_DELAY);
 	}
 
-	public void stopExecution(Auction auction){
+	public void stopRecording(Auction auction){
 		if (executions.containsKey(auction)){
 			executions.get(auction).cancel();
 			executions.remove(auction);
@@ -44,6 +46,11 @@ public class BiddingRecorderJob {
 		return executions.containsKey(auction);
 	}
 	
+	@Override
+	public void onApplicationEvent(AuctionClosedEvent event) {
+		stopRecording(event.getAuction());
+	}
+
 	private class RecordingTimerTask extends TimerTask{
 
 		private Auction auction;
@@ -58,8 +65,8 @@ public class BiddingRecorderJob {
 			try {
 				bidHistoryRecorder.record(auction);
 			} catch (AuctionClosedException e) {
-				log.info(String.format("Auction '%s' has been closed, removing frp, bidding recorder",auction.getAuctionTitle()));
-				stopExecution(auction);
+				log.info(String.format("Auction '%s' has been closed, removing bidding recorder",auction.getAuctionTitle()));
+				stopRecording(auction);
 			}
 		}
 		

@@ -7,12 +7,14 @@ public class UserBidSummary {
 	private String user;
 	private int bidCount;
 	private Date lastBid;
+	private double amount;
 	
-	public UserBidSummary(String user, int bidCount, Date lastBid) {
+	public UserBidSummary(String user, int bidCount, Date lastBid, double amount) {
 		super();
 		this.user = user;
 		this.bidCount = bidCount;
 		this.lastBid = lastBid;
+		this.amount = amount;
 	}
 
 	public String getUser() {
@@ -37,6 +39,14 @@ public class UserBidSummary {
 
 	public void setLastBid(Date lastBid) {
 		this.lastBid = lastBid;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 }

@@ -1,0 +1,139 @@
+<zk xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<window id="auctionView" use="za.co.zynafin.smokoo.web.AuctionCtrl">
+		<borderlayout height="600px" id="mainLayout">
+			<north size="50px"></north>
+			<center title="Bidding" id="centerLayout">
+				<button label="Start Bidding" id="startBiddingBtn" />
+			</center>
+			<west width="300px" collapsible="true" title=" ">
+				<div>
+					<groupbox mold="3d">
+						<caption label="General"></caption>
+						<vbox>
+							<label value="@{auction.name}" />
+							<hbox>
+								<label value="R  " />
+								<label value="@{auction.retailPrice}" />
+							</hbox>
+
+						</vbox>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Price - Last 24 Hours" id="last24HoursGroup" />
+						<grid>
+							<columns>
+								<column label="" width="100px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<label value="Min Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last24Hours.minPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+								<row>
+									<label value="Max Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last24Hours.maxPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+								<row>
+									<label value="Avg Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last24Hours.avgPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Price - Last 7 Days"></caption>
+						<grid>
+							<columns>
+								<column label="" width="100px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<label value="Min Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last7Days.minPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+								<row>
+									<label value="Max Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last7Days.maxPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+								<row>
+									<label value="Avg Price:" />
+									<hbox>
+										<label value="R " style="font-weight:bold;" />
+										<label value="@{last7Days.avgPrice}" style="font-weight:bold;" />
+									</hbox>
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+
+					<groupbox mold="3d">
+						<caption label="Bid Count - Last 24 Hours"></caption>
+						<grid>
+							<columns>
+								<column label="" width="100px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<label value="Min Count:" />
+									<label value="@{last24Hours.minCount}" style="font-weight:bold;" />
+								</row>
+								<row>
+									<label value="Max Count:" />
+									<label value="@{last24Hours.maxCount}" style="font-weight:bold;" />
+								</row>
+								<row>
+									<label value="Avg Count:" />
+									<label value="@{last24Hours.avgCount}" style="font-weight:bold;" />
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Bid Count - Last 7 Days" id="last7DaysBidCountGroup" />
+						<grid>
+							<columns>
+								<column label="" width="100px" />
+								<column label="" />
+							</columns>
+							<rows>
+								<row>
+									<label value="Min Count:" />
+									<label value="@{last7Days.minCount}" style="font-weight:bold;" />
+								</row>
+								<row>
+									<label value="Max Count:" />
+									<label value="@{last7Days.maxCount}" style="font-weight:bold;" />
+								</row>
+								<row>
+									<label value="Avg Count:" />
+									<label value="@{last7Days.avgCount}" style="font-weight:bold;" />
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+				</div>
+			</west>
+		</borderlayout>
+	</window>
+</zk>
+
+
+

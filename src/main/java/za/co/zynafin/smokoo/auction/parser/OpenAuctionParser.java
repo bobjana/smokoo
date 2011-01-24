@@ -36,6 +36,9 @@ public class OpenAuctionParser extends AuctionParser{
 			TagNode timeNode = (TagNode)timeNodeObject[0];
 			auction.setDate(parseDate(timeNode.getText().toString()));
 			auction.setAuctionId(parseAuctionId(timeNode.getAttributeByName("id")));
+
+			Object[] attributeNodes = auctionTagNode.evaluateXPath("//div[@class='div_line_ico']");
+			auction.setFastAndFurious(parseFastAndFurious(attributeNodes));
 			
 			auctions.add(auction);
 		}
@@ -43,6 +46,7 @@ public class OpenAuctionParser extends AuctionParser{
 
 	}
 	
+
 	private Date parseDate(String rawData) {
 		if (StringUtils.isAlpha(rawData)){
 			return null;
@@ -67,6 +71,17 @@ public class OpenAuctionParser extends AuctionParser{
 		}
 		String id = StringUtils.remove(rawData, prefix);
 		return new Long(id);
+	}
+	
+	private boolean parseFastAndFurious(Object[] attributeNodes) {
+		for (Object attr : attributeNodes){
+			TagNode tagNode = (TagNode) attr;
+			String title = tagNode.getAttributeByName("title");
+			if (title != null && title.equals("Fast and Furious Auction")){
+				return true;
+			}
+		}
+		return false;
 	}
 
 

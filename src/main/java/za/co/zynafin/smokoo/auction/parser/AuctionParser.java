@@ -1,5 +1,6 @@
 package za.co.zynafin.smokoo.auction.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +13,9 @@ import za.co.zynafin.smokoo.Auction;
 public abstract class AuctionParser {
 
 	public final List<Auction> parse(String content){
+		if (StringUtils.isEmpty(content)){
+			return new ArrayList<Auction>();
+		}
 		try {
 			HtmlCleaner cleaner = new HtmlCleaner();
 			TagNode node = cleaner.clean(content);

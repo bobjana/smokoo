@@ -1,17 +1,21 @@
 package za.co.zynafin.smokoo;
 
-import java.util.Date;
+import java.util.concurrent.Executors;
+
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jmx.export.MBeanExporter;
 
-import za.co.zynafin.smokoo.auction.TimeRemainingCalculator;
 import za.co.zynafin.smokoo.bid.BiddingManager;
+import za.co.zynafin.smokoo.bid.BiddingManagerFactory;
 
 public class Main {
 
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/spring/applicationContext.xml");
+	public static void main(String[] args) throws Exception{
+		final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/spring/applicationContext.xml");
 
 //		Auction auction = new Auction();
 //		String auctionTitle = "smokooauction_sonyledbraviakdl_40ex600_2_041301";
@@ -57,7 +61,23 @@ public class Main {
 //			}
 //		}
 		
-		BiddingManager biddingManager = context.getBean(BiddingManager.class);
-		biddingManager.bid(10769, 5);
+		
+		final MBeanExporter exporter = context.getBean(MBeanExporter.class);
+		exporter.setAutodetect(false);
+		
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				BiddingManager biddingManager = context.getBean(BiddingManager.class);
+//				biddingManager.start(10796, 15);
+				
+			}
+		});
+		
+
+		
+		
+		
 	}
 }

@@ -16,7 +16,8 @@ privileged aspect Auction_Roo_ToString {
         sb.append("AuctionId: ").append(getAuctionId()).append(", ");
         sb.append("Date: ").append(getDate()).append(", ");
         sb.append("Closed: ").append(isClosed()).append(", ");
-        sb.append("RetailPrice: ").append(getRetailPrice());
+        sb.append("RetailPrice: ").append(getRetailPrice()).append(", ");
+        sb.append("FastAndFurious: ").append(isFastAndFurious());
         return sb.toString();
     }
     

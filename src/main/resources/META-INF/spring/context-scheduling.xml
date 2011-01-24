@@ -3,8 +3,8 @@
 
 	<bean id="_auctionCloser" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask" ref="auctionCloser"/>
-		<property name="period" value="300000"/> <!-- 5 minutes -->
-		<property name="delay" value="1000"></property>
+		<property name="period" value="1800000"/> <!-- 5 minutes -->
+		<property name="delay" value="3000"></property>
 	</bean>
 
 	<!-- NOTE Scheduler delay < bufferedTime -->
@@ -20,12 +20,19 @@
 		<property name="delay" value="7000"></property>
 	</bean>
 	
+	<bean id="_nightlyBidLauncherJob" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask" ref="nightlyBidLauncherJob"/>
+		<property name="period" value="1800000"/> <!-- 30 minutes -->
+		<property name="delay" value="7000"></property>
+	</bean>
+	
 	<bean class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="_auctionCloser"/>
 				<ref bean="_auctionMonitorJob"/>
 				<ref bean="_auctionRetrievalJob"/>
+				<ref bean="_nightlyBidLauncherJob"/>
 			</list>
 		</property>
 	</bean>

@@ -2,6 +2,8 @@ package za.co.zynafin.smokoo.auction;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,15 +40,19 @@ public class TimeRemainingCalculator {
 	}
 
 	public long calculate(long auctionId){
-		long startTime = new Date().getTime();
+		StopWatch w = new StopWatch();
+		w.start();
 		String url = Constants.AUCTION_TIME_REMAING_URL + String.format("?auction_ids=%s&unique_string=%s",Long.toString(auctionId),
 				randomizer.randomize());
 		String content = smokooConnector.get(url);
+		if (StringUtils.isEmpty(content)){
+			return 0;
+		}
 		long remaining = timeRemainingParser.parse(content, auctionId);
-		long endTime = new Date().getTime();
-		long duration = endTime - startTime;
-System.out.println("Calc duration: " + duration);
-		long result = remaining - duration;
+		w.stop();
+		//TODO: post to queue for further analysis
+//System.out.println("Calc duration: " + duration);
+		long result = remaining - w.getTime();
 		if (result <= 0){
 			return 0;
 		}
