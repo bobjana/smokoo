@@ -22,7 +22,7 @@ public class AuctionHistory {
 	private double minPrice = Double.MAX_VALUE;
 	private double maxPrice = 0;
 	private double avgPrice = 0;
-	private int minCount = -1;
+	private int minCount = 0;
 	private int maxCount = Integer.MAX_VALUE;
 	private int avgCount = 0;
 	private Double[][] amountData;
@@ -35,6 +35,7 @@ public class AuctionHistory {
 		} catch (AuctionDataNotAvaliableException e) {
 			log.info(String.format("No auction data for interval '%s' and auction '%s' is available",
 					intervalType.toString(), auction.getId()));
+			return;
 		}
 		@SuppressWarnings("rawtypes")
 		ChartUtils chartUtils = new ChartUtils<Integer>(Integer.class);
@@ -129,6 +130,14 @@ public class AuctionHistory {
 
 	public int getAvgCount() {
 		return avgCount;
+	}
+
+	public Double[][] getAmountData() {
+		return amountData;
+	}
+
+	public Integer[][] getCountData() {
+		return countData;
 	}
 
 }

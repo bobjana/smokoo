@@ -4,7 +4,7 @@
 	<bean id="_auctionCloser" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask" ref="auctionCloser"/>
 		<property name="period" value="1800000"/> <!-- 5 minutes -->
-		<property name="delay" value="3000"></property>
+		<property name="delay" value="5000"></property>
 	</bean>
 
 	<!-- NOTE Scheduler delay < bufferedTime -->

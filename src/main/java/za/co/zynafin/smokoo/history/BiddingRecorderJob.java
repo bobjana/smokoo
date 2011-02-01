@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import za.co.zynafin.smokoo.auction.AuctionClosedEvent;
 import za.co.zynafin.smokoo.auction.AuctionClosedException;
 
 @Component
-public class BiddingRecorderJob implements ApplicationListener<AuctionClosedEvent>{
+public class BiddingRecorderJob implements ApplicationListener<ApplicationEvent>{
 
 	private static final Logger log = Logger.getLogger(BiddingRecorderJob.class);
 	
@@ -30,9 +31,13 @@ public class BiddingRecorderJob implements ApplicationListener<AuctionClosedEven
 	}
 
 	public void startRecording(Auction auction){
+		startRecording(auction,DEFAULT_DELAY);
+	}
+	
+	public void startRecording(Auction auction, long delayInMillis){
 		RecordingTimerTask recordingTimerTask = new RecordingTimerTask(auction);
 		executions.put(auction, recordingTimerTask);
-		timer.schedule(recordingTimerTask, 0, DEFAULT_DELAY);
+		timer.schedule(recordingTimerTask, 0, delayInMillis);
 	}
 
 	public void stopRecording(Auction auction){
@@ -47,8 +52,16 @@ public class BiddingRecorderJob implements ApplicationListener<AuctionClosedEven
 	}
 	
 	@Override
-	public void onApplicationEvent(AuctionClosedEvent event) {
-		stopRecording(event.getAuction());
+	public void onApplicationEvent(ApplicationEvent event) {
+		if (event instanceof AuctionClosedEvent){
+			stopRecording(((AuctionClosedEvent)event).getAuction());
+		}
+		else if (event instanceof RecordingSpeedChangeEvent){
+			RecordingSpeedChangeEvent recordingSpeedChangeEvent = (RecordingSpeedChangeEvent)event;
+			Auction auction = recordingSpeedChangeEvent.getAuction();
+			stopRecording(auction);
+			startRecording(auction,recordingSpeedChangeEvent.getSpeed());
+		}
 	}
 
 	private class RecordingTimerTask extends TimerTask{

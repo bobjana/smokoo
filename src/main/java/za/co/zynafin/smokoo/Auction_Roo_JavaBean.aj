@@ -64,4 +64,20 @@ privileged aspect Auction_Roo_JavaBean {
         this.fastAndFurious = fastAndFurious;
     }
     
+    public boolean Auction.isBiddingAutomated() {
+        return this.biddingAutomated;
+    }
+    
+    public void Auction.setBiddingAutomated(boolean biddingAutomated) {
+        this.biddingAutomated = biddingAutomated;
+    }
+    
+    public int Auction.getMaxNumberOfBids() {
+        return this.maxNumberOfBids;
+    }
+    
+    public void Auction.setMaxNumberOfBids(int maxNumberOfBids) {
+        this.maxNumberOfBids = maxNumberOfBids;
+    }
+    
 }

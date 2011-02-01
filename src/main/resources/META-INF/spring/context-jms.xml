@@ -13,6 +13,7 @@
   <amq:broker id="broker" useJmx="false" persistent="false" useShutdownHook="true" brokerName="smokoo"/>
 
   <amq:queue id="timeRemainingQueue" physicalName="timeRemainingQueue"/>
+  <amq:queue id="eventQueue" physicalName="eventQueue"/>
   <amq:queue id="calculatorDelayQueue" physicalName="calculatorDelayQueue"/>
 
   <amq:connectionFactory id="jmsFactory" brokerURL="vm://smokoo"/>

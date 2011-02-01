@@ -30,7 +30,7 @@ public class NightlyBidLauncherJob extends TimerTask implements ApplicationConte
 
 	private AuctionService auctionService;
 	private ApplicationContext applicationContext;
-	private Map<Auction, BiddingManager> processedAuctions = new HashMap<Auction, BiddingManager>();
+//	private Map<Auction, BiddingManager> processedAuctions = new HashMap<Auction, BiddingManager>();
 
 	@Autowired
 	public void setAuctionService(AuctionService auctionService) {
@@ -44,56 +44,56 @@ public class NightlyBidLauncherJob extends TimerTask implements ApplicationConte
 
 	@Override
 	public void run() {
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(new Date());
-		if (cal.get(Calendar.HOUR_OF_DAY) > 1 && cal.get(Calendar.HOUR_OF_DAY) < 5) {
-			List<Auction> auctions = auctionService.listOpenAuctions();
-			Date cuttoff = DateUtils.addMinutes(new Date(), 30);
-			for (Auction auction : auctions) {
-				if (processedAuctions.containsKey(auction)) {
-					continue;
-				}
-				if (auction.getName().endsWith("Smokoo Credits") && auction.getDate().before(cuttoff)) {
-					BiddingManager biddingManager = applicationContext.getBean(BiddingManager.class);
-					biddingManager.start(auction);
-					processedAuctions.put(auction, biddingManager);
-					
-
-					ObjectName objectName = null;
-					try {
-						objectName = new ObjectName("bean:name=test123");
-					} catch (MalformedObjectNameException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NullPointerException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//		Calendar cal = new GregorianCalendar();
+//		cal.setTime(new Date());
+//		if (cal.get(Calendar.HOUR_OF_DAY) > 1 && cal.get(Calendar.HOUR_OF_DAY) < 5) {
+//			List<Auction> auctions = auctionService.listOpenAuctions();
+//			Date cuttoff = DateUtils.addMinutes(new Date(), 30);
+//			for (Auction auction : auctions) {
+//				if (processedAuctions.containsKey(auction)) {
+//					continue;
+//				}
+//				if (auction.getName().endsWith("Smokoo Credits") && auction.getDate().before(cuttoff)) {
+//					BiddingManager biddingManager = applicationContext.getBean(BiddingManager.class);
+//					biddingManager.start(auction);
+//					processedAuctions.put(auction, biddingManager);
+//					
 //
-//					objectName = ObjectNameManager.getInstance(objName);
+//					ObjectName objectName = null;
+//					try {
+//						objectName = new ObjectName("bean:name=test123");
+//					} catch (MalformedObjectNameException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (NullPointerException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+////
+////					objectName = ObjectNameManager.getInstance(objName);
+////					exporter.setAutodetect(false);
+//					MBeanExporter exporter = applicationContext.getBean(MBeanExporter.class);
 //					exporter.setAutodetect(false);
-					MBeanExporter exporter = applicationContext.getBean(MBeanExporter.class);
-					exporter.setAutodetect(false);
-					
-					exporter.registerManagedResource(biddingManager, objectName);
-					
-					
-					
-					break;
-				}
-			}
-		}
+//					
+//					exporter.registerManagedResource(biddingManager, objectName);
+//					
+//					
+//					
+//					break;
+//				}
+//			}
+//		}
 	}
 
 	@Override
 	public void onApplicationEvent(AuctionClosedEvent event) {
-		BiddingManager manager = processedAuctions.get(event.getAuction());
-		if (manager == null) {
-			return;
-		}
-		manager.stop();
-		processedAuctions.remove(event.getAuction());
-		manager = null;
+//		BiddingManager manager = processedAuctions.get(event.getAuction());
+//		if (manager == null) {
+//			return;
+//		}
+////		manager.stop();
+//		processedAuctions.remove(event.getAuction());
+//		manager = null;
 	}
 
 }

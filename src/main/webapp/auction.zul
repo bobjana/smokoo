@@ -3,7 +3,7 @@
 		<borderlayout height="600px" id="mainLayout">
 			<north size="50px"></north>
 			<center title="Bidding" id="centerLayout">
-				<button label="Start Bidding" id="startBiddingBtn" />
+				<include id="biddingInclude" src="bidding.zul"/>
 			</center>
 			<west width="300px" collapsible="true" title=" ">
 				<div>
@@ -19,7 +19,7 @@
 						</vbox>
 					</groupbox>
 					<groupbox mold="3d">
-						<caption label="Price - Last 24 Hours" id="last24HoursGroup" />
+						<caption label="Price - Last 24 Hours" id="last24HoursPrices" />
 						<grid>
 							<columns>
 								<column label="" width="100px" />
@@ -51,7 +51,7 @@
 						</grid>
 					</groupbox>
 					<groupbox mold="3d">
-						<caption label="Price - Last 7 Days"></caption>
+						<caption label="Price - Last 7 Days" id="last7DaysPrices"></caption>
 						<grid>
 							<columns>
 								<column label="" width="100px" />
@@ -84,7 +84,7 @@
 					</groupbox>
 
 					<groupbox mold="3d">
-						<caption label="Bid Count - Last 24 Hours"></caption>
+						<caption label="Bid Count - Last 24 Hours" id="last24HoursBidCount"/>
 						<grid>
 							<columns>
 								<column label="" width="100px" />
@@ -107,7 +107,7 @@
 						</grid>
 					</groupbox>
 					<groupbox mold="3d">
-						<caption label="Bid Count - Last 7 Days" id="last7DaysBidCountGroup" />
+						<caption label="Bid Count - Last 7 Days" id="last7DaysBidCount" />
 						<grid>
 							<columns>
 								<column label="" width="100px" />
@@ -131,6 +131,9 @@
 					</groupbox>
 				</div>
 			</west>
+			<south>
+				<iframe id="auctionIFrame" width="100%"/>
+			</south>
 		</borderlayout>
 	</window>
 </zk>

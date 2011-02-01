@@ -21,11 +21,13 @@ import org.zkoss.zul.SimpleListModel;
 import za.co.zynafin.smokoo.Auction;
 import za.co.zynafin.smokoo.auction.AuctionDateComparator;
 import za.co.zynafin.smokoo.auction.AuctionService;
+import za.co.zynafin.smokoo.util.ZKApplicationEventListener;
 
 public class IndexCtrl extends BaseCtrl{
 
 	private AuctionService auctionService;
 	private Grid openAuctionsGrid;
+	private ZKApplicationEventListener applicationEventListener;
 	
 	@Override
 	public void afterCompose() {

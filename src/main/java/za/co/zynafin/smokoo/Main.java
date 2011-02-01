@@ -2,15 +2,9 @@ package za.co.zynafin.smokoo;
 
 import java.util.concurrent.Executors;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jmx.export.MBeanExporter;
-
-import za.co.zynafin.smokoo.bid.BiddingManager;
-import za.co.zynafin.smokoo.bid.BiddingManagerFactory;
 
 public class Main {
 
@@ -45,7 +39,7 @@ public class Main {
 //	janitorJob.run();
 		
 		
-//		TimeRemainingCalculator calc = context.getBean(TimeRemainingCalculator.class);
+//		TimeRemainingTracker calc = context.getBean(TimeRemainingTracker.class);
 //		
 //		long gap = 500;
 //		while (true){
@@ -60,22 +54,6 @@ public class Main {
 //				e.printStackTrace();
 //			}
 //		}
-		
-		
-		final MBeanExporter exporter = context.getBean(MBeanExporter.class);
-		exporter.setAutodetect(false);
-		
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
-			
-			@Override
-			public void run() {
-				BiddingManager biddingManager = context.getBean(BiddingManager.class);
-//				biddingManager.start(10796, 15);
-				
-			}
-		});
-		
-
 		
 		
 		
