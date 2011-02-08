@@ -1,26 +1,42 @@
 package za.co.zynafin.smokoo.util.charts;
 
+import java.util.Set;
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import za.co.zynafin.smokoo.auction.AuctionResult;
 
 public class XYChartRenderer {
 	
 	private static final Logger log = Logger.getLogger(XYChartRenderer.class);
 	
-	private static final ChartUtils<Double> dChartUtils = new ChartUtils<Double>(Double.class);
-	private static final ChartUtils<Integer> iChartUtils = new ChartUtils<Integer>(Integer.class);
-	private HttpClient httpClient = new HttpClient();
+	private HttpClient httpClient;
 	
-	public byte[] render(Number[][] data) {
-		if (data == null || data[0][0] == null) {
+	public byte[] render(Set<AuctionResult> data) {
+		if (data == null || data.size() == 0){
 			return null;
 		}
-		String chartURL = buildGoogleChartURL(data);
-		GetMethod getMethod = new GetMethod(chartURL);
+		GoogleChartUtils chartUtils = new GoogleChartUtils();
+		String priceDataString = chartUtils.generatePriceData(data);
+		Double maxPrice = chartUtils.calculateMaxPrice(data);
+		String countDataString = chartUtils.generateBidCountData(data);
+		int maxCount = chartUtils.calculateMaxBidCount(data);
+		String result = StringUtils.replace(getTemplateChartURL(),"$data",priceDataString + "|" + countDataString);
+		result = StringUtils.replace(result, "$max", (maxPrice > maxCount?""+maxPrice:""+maxCount));
+		result = StringUtils.replace(result, "$legends", generateLegendsString(new String[]{"price","count"}));
+		result = StringUtils.replace(result, "$min-max", generateMinMaxString(maxPrice, 1) + "," + generateMinMaxString(maxCount, 1));
+		result = StringUtils.replace(result, "$xaxis", chartUtils.generateXAxisLabels(data));
+		result = StringUtils.replace(result, "$yaxis", chartUtils.generateYAxisLabels(maxPrice,true));
+		result = StringUtils.replace(result, "$raxis", chartUtils.generateYAxisLabels(maxCount,false));
+		result = StringUtils.replace(result, "|", "%7C");
+		System.err.println(result);
+		GetMethod getMethod = new GetMethod(result);
 		try {
-			httpClient.executeMethod(getMethod);
+			getHttpClient().executeMethod(getMethod);
 			return getMethod.getResponseBody();
 		} catch (Exception e) {
 			log.error("Unable to render xy chart",e);
@@ -28,63 +44,45 @@ public class XYChartRenderer {
 		} 
 	}
 
-	private String buildGoogleChartURL(Number[][] data) {
-		String minSet = "";
-		String maxSet = "";
-		String avgSet = "";
-		Number max = 0;
-		for (int i = 0; i < data.length; i++) {
-			Number[] values = getValues(data[i]);
-			if (values == null){
-				continue;
-			}
-			if (values[1].doubleValue() > max.doubleValue()) {
-				max = values[1].doubleValue();
-			}
-			minSet += values[0] + ",";
-			maxSet += values[1] + ",";
-			avgSet += values[2] + ",";
+	private String generateMinMaxString(Number max, int length) {
+		String result = "";
+		for (int i = 0; i < length; i++){
+			result += "0," + max + ",";
 		}
-		String dataString = StringUtils.chop(minSet) + "|" + StringUtils.chop(maxSet) + "|" + StringUtils.chop(avgSet);
-		String result = StringUtils.replace(getTemplateChartURL(),"$data",dataString);
-		result = StringUtils.replace(result, "$max", max.toString());
-		result = StringUtils.replace(result, "|", "%7C");
-		return result;
+		return StringUtils.chop(result);
 	}
 
-	private Number[] getValues(Number[] data) {
-		Number[] result = new Number[3];
-		if (data.length == 0){
-			return null;
+	private String generateLegendsString(String[] legends) {
+		String result = "";
+		for (String legend : legends){
+			result += legend + "|";
 		}
-		if (data[0] instanceof Double){
-			Double[][] input = new Double[][]{(Double[])data};
-			result[0] = dChartUtils.getMin(input);
-			result[1] = dChartUtils.getMax(input);
-			result[2] = dChartUtils.getAvg(input);
-		}
-		else{
-			Integer[][] input = new Integer[][]{(Integer[])data};
-			result[0] = iChartUtils.getMin(input);
-			result[1] = iChartUtils.getMax(input);
-			result[2] = iChartUtils.getAvg(input);
-		}
-		return result;
+		return StringUtils.chop(result);
 	}
 	
 	private String getTemplateChartURL(){
 	 return "http://chart.apis.google.com/chart" + 
-	 		"?chxr=0,0,$max" + 
-	 		"&chxt=y" + 
-	 		"&chs=440x220" + 
+	 		"?chxr=0,0,$max" +
+	 		"&chxl=0:$xaxis|1:$yaxis|2:$raxis" + 
+	 		"&chxt=x,y,r" + 
+	 		"&chs=600x300" + 
 	 		"&cht=lc" + 
 	 		"&chco=3072F3,FF0000,FF9900" + 
-	 		"&chds=0,$max,0,$max,0,$max" + 
+	 		"&chds=$min-max" + 
 	 		"&chd=t:$data" + 
-	 		"&chdl=Min|Max|Avg" + 
+	 		"&chdl=$legends" + 
 	 		"&chdlp=b" + 
 	 		"&chls=2,4,1|1|1" + 
 	 		"&chma=5,5,5,25";
 	}
 	
+	
+	private HttpClient getHttpClient(){
+		if (httpClient == null){
+			SimpleHttpConnectionManager httpConnectionManager = new SimpleHttpConnectionManager();
+			httpConnectionManager.getParams().setConnectionTimeout(2000);
+			httpClient = new HttpClient(httpConnectionManager);
+		}
+		return httpClient;
+	}
 }

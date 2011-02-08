@@ -1,9 +1,7 @@
 package za.co.zynafin.smokoo.auction;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.commons.lang.time.DateUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 import za.co.zynafin.smokoo.Auction;
@@ -16,14 +14,11 @@ public class AuctionResultRequest {
 	public AuctionResultRequest(Auction auction, AuctionIntervalType type) {
 		super();
 		this.auction = auction;
-		Date date = DateUtils.setMinutes(auction.getDate(), 59);
-		long startInstant;
 		if (type.equals(AuctionIntervalType.HOURLY)) {
-			startInstant = DateUtils.truncate(DateUtils.addDays(date, -1),Calendar.HOUR_OF_DAY).getTime();
+			interval = Duration.standardHours(24).toIntervalTo(new DateTime());
 		} else {
-			startInstant = DateUtils.addDays(date, -7).getTime();
+			interval = Duration.standardDays(7).toIntervalTo(new DateTime());
 		}
-		interval = new Interval(startInstant, date.getTime());
 	}
 
 	public Auction getAuction() {
@@ -37,10 +32,5 @@ public class AuctionResultRequest {
 	public Interval getInterval() {
 		return interval;
 	}
-
-	public void setInterval(Interval interval) {
-		this.interval = interval;
-	}
-
 
 }

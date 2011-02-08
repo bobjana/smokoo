@@ -13,7 +13,7 @@
 
 	<aop:aspectj-autoproxy/>
 
-<!--	<bean id="timeRemainingTracker" class="za.co.zynafin.smokoo.util.TimeRemainingTracker"/>-->
+<!--	<bean id="timeRemainingTracker" class="za.co.zynafin.smokoo.util.NetworkLatencyTracker"/>-->
 <!--	-->
 <!--	<bean id="calculator" class="za.co.zynafin.smokoo.bid.SubSecondBiddingStrategy" scope="prototype">-->
 <!--		<property name="timeRemainingCalculator" ref="timeRemainingCalculator" />-->

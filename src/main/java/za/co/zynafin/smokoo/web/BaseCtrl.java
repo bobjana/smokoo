@@ -1,20 +1,18 @@
 package za.co.zynafin.smokoo.web;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.ApplicationEvent;
 import org.zkoss.lang.SystemException;
-import org.zkoss.xel.VariableResolver;
-import org.zkoss.xel.XelException;
-import org.zkoss.xel.util.SimpleResolver;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
-import org.zkoss.zk.ui.OperationException;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.CreateEvent;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.ForwardEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
@@ -22,6 +20,9 @@ import org.zkoss.zul.Borderlayout;
 import org.zkoss.zul.Center;
 import org.zkoss.zul.West;
 import org.zkoss.zul.Window;
+
+import za.co.zynafin.smokoo.auction.parser.AuctionActivityEvent;
+import za.co.zynafin.smokoo.util.ComponentListener;
 
 /**
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++<br>
@@ -31,7 +32,7 @@ import org.zkoss.zul.Window;
  * <br>
  * 
  */
-public abstract class BaseCtrl extends Window implements AfterCompose, Serializable{
+public abstract class BaseCtrl extends Window implements AfterCompose, Serializable {
 
 	private static final long serialVersionUID = -2179229704315045689L;
 

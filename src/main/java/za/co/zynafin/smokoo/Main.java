@@ -39,7 +39,7 @@ public class Main {
 //	janitorJob.run();
 		
 		
-//		TimeRemainingTracker calc = context.getBean(TimeRemainingTracker.class);
+//		NetworkLatencyTracker calc = context.getBean(NetworkLatencyTracker.class);
 //		
 //		long gap = 500;
 //		while (true){

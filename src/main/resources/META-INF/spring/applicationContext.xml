@@ -3,7 +3,7 @@
   
   	<import resource="context-scheduling.xml"/>
   	<import resource="context-bidding.xml"/>
-<!--  	<import resource="context-jms.xml"/>-->
+  	<import resource="context-jms.xml"/>
     <!--
 		This will automatically locate any and all property files you have
 		within your classpath, provided they fall under the META-INF/spring

@@ -35,8 +35,11 @@ public class SmokooConnector {
 	}
 
 	public SmokooConnector() {
-		this.httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		MultiThreadedHttpConnectionManager httpConnectionManager = new MultiThreadedHttpConnectionManager();
+		httpConnectionManager.getParams().setConnectionTimeout(5000);
+		this.httpClient = new HttpClient(httpConnectionManager);
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+		
 		Executors.newSingleThreadExecutor().execute(new InitializeTask());
 	}
 
@@ -58,7 +61,9 @@ public class SmokooConnector {
 								+ getSessionIdCookie());
 		int status;
 		try {
+			log.debug("Before execute of http get: " + url);
 			status = httpClient.executeMethod(getMethod);
+			log.debug("after execute of http get - " + status);
 			if (HttpStatus.SC_OK != status) {
 				throw new RuntimeException("Unable to get smokoo content - " + status);
 			}
@@ -120,7 +125,7 @@ public class SmokooConnector {
 
 			int status = httpClient.executeMethod(postMethod);
 		} catch (Exception e) {
-			log.error("Get request failed", e);
+			log.error("Post request failed", e);
 			return null;
 		} finally {
 			if (postMethod != null) {

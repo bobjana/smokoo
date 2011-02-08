@@ -1,50 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jms="http://www.springframework.org/schema/jms"
-       xmlns:amq="http://activemq.apache.org/schema/core"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-  	http://www.springframework.org/schema/jms
-  	http://www.springframework.org/schema/jms/spring-jms-2.5.xsd
-    http://activemq.apache.org/schema/core
-		http://activemq.apache.org/schema/core/activemq-core.xsd">
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jms="http://www.springframework.org/schema/jms"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
 
-  <!--  Create an embedded ActiveMQ Broker -->
-  <amq:broker id="broker" useJmx="false" persistent="false" useShutdownHook="true" brokerName="smokoo"/>
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm://embedded?broker.persistent=false"/>
+	</bean>
 
-  <amq:queue id="timeRemainingQueue" physicalName="timeRemainingQueue"/>
-  <amq:queue id="eventQueue" physicalName="eventQueue"/>
-  <amq:queue id="calculatorDelayQueue" physicalName="calculatorDelayQueue"/>
+	<bean id="applicationEventQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="application.event.queue"/>
+	</bean>
 
-  <amq:connectionFactory id="jmsFactory" brokerURL="vm://smokoo"/>
-
-  <bean id="jmsConsumerConnectionFactory"
-        class="org.springframework.jms.connection.SingleConnectionFactory"
-        depends-on="broker">
-    <property name="targetConnectionFactory" ref="jmsFactory"/>
-  </bean>
-
-  <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-    <property name="connectionFactory" ref="jmsConsumerConnectionFactory"/>
-    <property name="destination" ref="eventQueue"/>
-    <property name="messageListener" ref="eventMessageListener"/>
-    <property name="taskExecutor">
-      <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="10"/>
-        <property name="keepAliveSeconds" value="120"/>
-        <property name="allowCoreThreadTimeOut" value="true"/>
-      </bean>
-    </property>
-    <property name="concurrentConsumers" value="10"/>
-    <property name="maxConcurrentConsumers" value="50"/>
-    <property name="receiveTimeout" value="5000"/>
-    <property name="maxMessagesPerTask" value="10"/>
-  </bean>
-
-  <!-- CLIENT SIDE  -->
-  <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-    <property name="connectionFactory" ref="jmsConsumerConnectionFactory"/>
-    <property name="defaultDestination" ref="eventQueue"/>
-  </bean>
-
+	<!-- CLIENT SIDE -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestination" ref="applicationEventQueue" />
+	</bean>
+	
+	<jms:listener-container>
+		<jms:listener destination="application.event.queue" ref="networkLatencyMonitor" method="onNetworkLatency"/>
+	</jms:listener-container>
+	
 </beans>
+

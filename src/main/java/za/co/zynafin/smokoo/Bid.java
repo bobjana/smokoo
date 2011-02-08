@@ -1,5 +1,6 @@
 package za.co.zynafin.smokoo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -14,7 +15,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooEntity(finders = { "findBidsByAmmount" })
-public class Bid {
+public class Bid implements Serializable{
 
     private Date date;
 

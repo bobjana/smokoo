@@ -1,5 +1,6 @@
 package za.co.zynafin.smokoo.history;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -16,55 +17,69 @@ import za.co.zynafin.smokoo.auction.AuctionClosedEvent;
 import za.co.zynafin.smokoo.auction.AuctionClosedException;
 
 @Component
-public class BiddingRecorderJob implements ApplicationListener<ApplicationEvent>{
+public class BiddingRecorderJob implements ApplicationListener<ApplicationEvent> {
 
 	private static final Logger log = Logger.getLogger(BiddingRecorderJob.class);
-	
-	private Map<Auction,TimerTask> executions = new HashMap<Auction, TimerTask>();
+
+	private Map<Auction, RecordingTimerTask> executions = new HashMap<Auction, RecordingTimerTask>();
 	private BiddingRecorder bidHistoryRecorder;
 	private Timer timer = new Timer();
-	private static final long DEFAULT_DELAY = 20000; //20 seconds
-	
+	private static final long DEFAULT_DELAY = 20000; // 20 seconds
+
 	@Autowired
 	public void setBidHistoryRecorder(BiddingRecorder bidHistoryRecorder) {
 		this.bidHistoryRecorder = bidHistoryRecorder;
 	}
 
-	public void startRecording(Auction auction){
-		startRecording(auction,DEFAULT_DELAY);
-	}
-	
-	public void startRecording(Auction auction, long delayInMillis){
-		RecordingTimerTask recordingTimerTask = new RecordingTimerTask(auction);
-		executions.put(auction, recordingTimerTask);
-		timer.schedule(recordingTimerTask, 0, delayInMillis);
+	public void startRecording(Auction auction) {
+		if (!executions.containsKey(auction)){
+if (executions.size() > 0){
+System.out.println("--start record " + auction.getAuctionTitle());
+for (Auction execution : executions.keySet()){
+	System.out.println("-" + execution.getAuctionTitle());
+}
+}
+			startRecording(auction, DEFAULT_DELAY);
+		}
 	}
 
-	public void stopRecording(Auction auction){
+	public void startRecording(Auction auction, long period) {
 		if (executions.containsKey(auction)){
 			executions.get(auction).cancel();
 			executions.remove(auction);
 		}
+		RecordingTimerTask recordingTimerTask = new RecordingTimerTask(auction);
+		executions.put(auction, recordingTimerTask);
+		timer.schedule(recordingTimerTask, 0, period);
+System.out.println("start record " + period + "   " + executions.size());
 	}
-	
-	public boolean isExecuting(Auction auction){
-		return executions.containsKey(auction);
-	}
-	
-	@Override
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof AuctionClosedEvent){
-			stopRecording(((AuctionClosedEvent)event).getAuction());
-		}
-		else if (event instanceof RecordingSpeedChangeEvent){
-			RecordingSpeedChangeEvent recordingSpeedChangeEvent = (RecordingSpeedChangeEvent)event;
-			Auction auction = recordingSpeedChangeEvent.getAuction();
-			stopRecording(auction);
-			startRecording(auction,recordingSpeedChangeEvent.getSpeed());
+
+	public void stopRecording(Auction auction) {
+		if (executions.containsKey(auction)) {
+			executions.get(auction).cancel();
+			executions.remove(auction);
 		}
 	}
 
-	private class RecordingTimerTask extends TimerTask{
+	public boolean isExecuting(Auction auction) {
+		return executions.containsKey(auction);
+	}
+
+	@Override
+	public void onApplicationEvent(ApplicationEvent event) {
+		if (event instanceof AuctionClosedEvent) {
+			stopRecording(((AuctionClosedEvent) event).getAuction());
+		} else if (event instanceof RecordingSpeedChangeEvent) {
+			RecordingSpeedChangeEvent recordingSpeedChangeEvent = (RecordingSpeedChangeEvent) event;
+			log.info(String.format("Change recording speed for auction (%s) to %s ms", recordingSpeedChangeEvent.getAuction()
+					.getAuctionId(), recordingSpeedChangeEvent.getSpeed()));
+			Auction auction = recordingSpeedChangeEvent.getAuction();
+			stopRecording(auction);
+			startRecording(auction, recordingSpeedChangeEvent.getSpeed());
+		}
+	}
+
+	private class RecordingTimerTask extends TimerTask {
 
 		private Auction auction;
 		
@@ -78,10 +93,10 @@ public class BiddingRecorderJob implements ApplicationListener<ApplicationEvent>
 			try {
 				bidHistoryRecorder.record(auction);
 			} catch (AuctionClosedException e) {
-				log.info(String.format("Auction '%s' has been closed, removing bidding recorder",auction.getAuctionTitle()));
+				log.info(String.format("Auction '%s' has been closed, removing bidding recorder", auction.getAuctionTitle()));
 				stopRecording(auction);
 			}
 		}
-		
+
 	}
 }

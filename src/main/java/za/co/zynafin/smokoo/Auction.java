@@ -35,31 +35,6 @@ public class Auction {
 	
 	private int maxNumberOfBids;
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((auctionTitle == null) ? 0 : auctionTitle.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Auction other = (Auction) obj;
-		if (auctionTitle == null) {
-			if (other.auctionTitle != null)
-				return false;
-		} else if (!auctionTitle.equals(other.auctionTitle))
-			return false;
-		return true;
-	}
-
 	public static TypedQuery<Auction> findAuctionsByClosedAndDateNotNull(boolean closed) {
 		EntityManager em = Auction.entityManager();
 		TypedQuery<Auction> q = em
@@ -83,6 +58,31 @@ public class Auction {
 		}
 		biddingAutomated = false;
 		ApplicationEventPublisher.publishEvent(new AutomateAuctionEvent(this));
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((auctionTitle == null) ? 0 : auctionTitle.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Auction other = (Auction) obj;
+		if (auctionTitle == null) {
+			if (other.auctionTitle != null)
+				return false;
+		} else if (!auctionTitle.equals(other.auctionTitle))
+			return false;
+		return true;
 	}
 	
 

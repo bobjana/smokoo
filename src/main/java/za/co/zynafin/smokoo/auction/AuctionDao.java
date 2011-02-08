@@ -20,7 +20,8 @@ public class AuctionDao {
 	@Resource
 	private DataSource dataSource;
 	private SimpleJdbcTemplate template;
-	private String SQL = "Select auction.date" + 
+	private String SQL = "Select auction.id" +
+			",auction.date" + 
 			",max(bid.ammount) as winning_amount" + 
 			",count(bid.id) as bid_count" + 
 			",bid.user" + 
@@ -31,10 +32,12 @@ public class AuctionDao {
 			"where closed = 1 " + 
 			"and name = :auctionName " + 
 			"and auction.date >= :startDate " + 
-			"group by auction.id " + 
+			"and auction.fast_and_furious = :fastAndFurious " + 
+			"group by bid.user" +
+			",auction.id " + 
 			",name " + 
 			"having Count(bid.id) > 1 " + 
-			"order by auction.date asc";
+			"order by auction.id,count(bid.id) desc";
 	
 	public void init(){
 		template = new SimpleJdbcTemplate(dataSource);
@@ -45,11 +48,12 @@ public class AuctionDao {
 		Map<String,Object> parameters = new HashMap<String, Object>();
 		parameters.put("auctionName", request.getAuction().getName());
 		parameters.put("startDate", new Timestamp(request.getInterval().getStartMillis()));
+		parameters.put("fastAndFurious", request.getAuction().isFastAndFurious());
 		return template.query(SQL, new RowMapper<AuctionResult>() {
 
 			@Override
 			public AuctionResult mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new AuctionResult(rs.getTimestamp(1), rs.getDouble(2), rs.getInt(3), rs.getString(4));
+				return new AuctionResult(rs.getLong(1),rs.getTimestamp(2), rs.getDouble(3), rs.getInt(4), rs.getString(5));
 			}
 			
 		},parameters);

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.zynafin.smokoo.Auction;
 import za.co.zynafin.smokoo.Constants;
 import za.co.zynafin.smokoo.auction.parser.TimeRemainingParser;
+import za.co.zynafin.smokoo.io.ApplicationMessageSender;
 import za.co.zynafin.smokoo.io.SmokooConnector;
 
 @Service
@@ -38,6 +39,8 @@ public class AuctionService implements ApplicationListener<AutomateAuctionEvent>
 	private SmokooConnector smokooConnector;
 	@Autowired
 	private TimeRemainingParser timeRemainingParser;
+	@Autowired
+	private ApplicationMessageSender applicationMessageSender;
 
 	private AuctionIdRandomizer randomizer;
 
@@ -74,8 +77,12 @@ public class AuctionService implements ApplicationListener<AutomateAuctionEvent>
 	public void save(Auction auction) {
 		try {
 			Auction existingAuction = Auction.findAuctionsByAuctionId(auction.getAuctionId()).getSingleResult();
-			existingAuction.setDate(auction.getDate());
-			auction = existingAuction;
+			if (existingAuction != null){
+				if (existingAuction.isClosed()){
+					existingAuction.setClosed(false);
+				}
+				auction = existingAuction;
+			}
 		} catch (EmptyResultDataAccessException e) {
 			// DO NOTHING
 		}
@@ -124,7 +131,6 @@ public class AuctionService implements ApplicationListener<AutomateAuctionEvent>
 		}
 		long remaining = timeRemainingParser.parse(content, auction.getAuctionId());
 		w.stop();
-		// TODO: post to queue for further analysis
 		long result = remaining - w.getTime();
 		if (result <= 0) {
 			return 0l;
@@ -174,7 +180,7 @@ public class AuctionService implements ApplicationListener<AutomateAuctionEvent>
 
 	private class SubSecondBiddingStrategy implements Runnable {
 
-		private static final long BID_LIMIT = 300l; // 600 milliseconds
+		private static final long BID_LIMIT = 3000l; // 600 milliseconds
 
 		private Auction auction;
 
