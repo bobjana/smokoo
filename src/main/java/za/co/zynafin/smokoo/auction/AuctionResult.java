@@ -9,14 +9,16 @@ public class AuctionResult implements Comparable<AuctionResult>{
 	private int numberOfBids;
 	private String winner;
 	private Long id;
+	private double bidIncrementAmount;
 	
-	public AuctionResult(Long id, Date date, double amount, int numberOfBids, String winner) {
+	public AuctionResult(Long id, Date date, double amount, int numberOfBids, String winner, double bidIncrementAmount) {
 		super();
 		this.id = id;
 		this.date = date;
 		this.amount = amount;
 		this.numberOfBids = numberOfBids;
 		this.winner = winner;
+		this.bidIncrementAmount = bidIncrementAmount;
 	}
 
 	public Date getDate() {
@@ -53,6 +55,17 @@ public class AuctionResult implements Comparable<AuctionResult>{
 
 	public Long getId() {
 		return id;
+	}
+	
+	public double getBidIncrementAmount() {
+		return bidIncrementAmount;
+	}
+	
+	public int getTotalNumberOfBidsPlaced(){
+		if (bidIncrementAmount == 0){
+			bidIncrementAmount = 0.05;
+		}
+		return new Float(amount / bidIncrementAmount).intValue();
 	}
 
 	@Override

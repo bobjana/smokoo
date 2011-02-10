@@ -1,7 +1,7 @@
 <zk xmlns:w="http://www.zkoss.org/2005/zk/client">
 	<window id="auctionView" use="za.co.zynafin.smokoo.web.AuctionCtrl">
-		<timer id="timeRemainingTimer" delay="90" repeats="true"/>
-		<timer id="statsRetrievalTimer" delay="3000" repeats="true"/>
+		<timer id="timeRemainingTimer" delay="100" repeats="true"/>
+		<timer id="statsRetrievalTimer" delay="2000" repeats="true"/>
 		
 		<borderlayout height="1000px" id="mainLayout">
 			<north size="75px">
@@ -38,6 +38,7 @@
 								<column label="Price" />
 								<column label="Count" />
 								<column label="Winner" />
+								<column label="Bids Spent" />
 							</columns>
 						</grid>
 					</groupbox>
@@ -49,6 +50,7 @@
 								<column label="Price" />
 								<column label="Count" />
 								<column label="Winner" />
+								<column label="Bids Spent" />
 							</columns>
 						</grid>
 					</groupbox>

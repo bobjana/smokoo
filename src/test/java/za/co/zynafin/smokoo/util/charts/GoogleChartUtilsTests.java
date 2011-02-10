@@ -3,9 +3,7 @@ package za.co.zynafin.smokoo.util.charts;
 import static org.junit.Assert.assertEquals;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -84,25 +82,25 @@ public class GoogleChartUtilsTests {
 	private Set<AuctionResult> getTestResults() throws Exception{
 		Set<AuctionResult> results = new TreeSet<AuctionResult>();
 		Date date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110202 05:23");
-		results.add(new AuctionResult(1l, date, 23.00, 10,null));
-		results.add(new AuctionResult(1l, date, 15.00, 7, null));
-		results.add(new AuctionResult(1l, date,12.00, 3, null));
+		results.add(new AuctionResult(1l, date, 23.00, 10,null,0.05));
+		results.add(new AuctionResult(1l, date, 15.00, 7, null,0.05));
+		results.add(new AuctionResult(1l, date,12.00, 3, null,0.05));
 		date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110202 20:23");
-		results.add(new AuctionResult(2l, date,3.15, 24, null));
-		results.add(new AuctionResult(2l, date, 2.75, 3, null));
+		results.add(new AuctionResult(2l, date,3.15, 24, null,0.05));
+		results.add(new AuctionResult(2l, date, 2.75, 3, null,0.05));
 		date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110202 23:16");
-		results.add(new AuctionResult(3l, date, 238.00, 45, null));
+		results.add(new AuctionResult(3l, date, 238.00, 45, null,0.05));
 		return results;
 	}
 	
 	private Set<AuctionResult> getMultipleDaysTestResults() throws Exception{
 		Set<AuctionResult> results = new TreeSet<AuctionResult>();
 		Date date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110130 20:23");
-		results.add(new AuctionResult(1l, date, 08.00, 10, null));
+		results.add(new AuctionResult(1l, date, 08.00, 10, null,0.05));
 		date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110131 20:00");
-		results.add(new AuctionResult(2l, date, 3.00, 5, null));
+		results.add(new AuctionResult(2l, date, 3.00, 5, null,0.05));
 		date = new SimpleDateFormat("yyyyMMdd HH:mm").parse("20110202 20:00");
-		results.add(new AuctionResult(3l, date, 238.00, 6,null));
+		results.add(new AuctionResult(3l, date, 238.00, 6,null,0.05));
 		return results;
 	}
 }

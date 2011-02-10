@@ -31,6 +31,8 @@ public class Auction {
 
 	private boolean fastAndFurious;
 	
+	private double bidIncrementAmount;
+	
 	private boolean biddingAutomated;
 	
 	private int maxNumberOfBids;

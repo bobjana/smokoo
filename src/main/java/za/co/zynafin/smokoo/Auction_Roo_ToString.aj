@@ -18,6 +18,7 @@ privileged aspect Auction_Roo_ToString {
         sb.append("Closed: ").append(isClosed()).append(", ");
         sb.append("RetailPrice: ").append(getRetailPrice()).append(", ");
         sb.append("FastAndFurious: ").append(isFastAndFurious()).append(", ");
+        sb.append("BidIncrementAmount: ").append(getBidIncrementAmount()).append(", ");
         sb.append("BiddingAutomated: ").append(isBiddingAutomated()).append(", ");
         sb.append("MaxNumberOfBids: ").append(getMaxNumberOfBids());
         return sb.toString();

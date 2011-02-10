@@ -28,6 +28,10 @@ public class OpenAuctionParser extends AuctionParser{
 			auction.setAuctionTitle(parseAuctionTitle(nameNode.getAttributeByName("href")));
 			auction.setName(nameNode.getText().toString());
 			
+			Object[] incrementNodeObject = auctionTagNode.evaluateXPath("//div[@title='Variable Price increments limits']/img");
+			TagNode incrementNode = (TagNode)incrementNodeObject[0];
+			auction.setBidIncrementAmount(parseBidIncrementAmmount(incrementNode.getAttributeByName("src")));
+			
 			Object[] priceNodeObject = auctionTagNode.evaluateXPath("//div[@class='div_box2_item_price']");
 			TagNode priceNode = (TagNode)priceNodeObject[0];
 			auction.setRetailPrice(parseRetailPrice(priceNode.getText().toString()));
@@ -46,6 +50,14 @@ public class OpenAuctionParser extends AuctionParser{
 
 	}
 	
+
+	private double parseBidIncrementAmmount(String attribute) {
+		String result = StringUtils.remove(attribute, "http://static.smokoo.co.za//data/images/prices/");
+		result = StringUtils.remove(result, "c.gif");
+		Double increment = new Double(result);
+		return increment / 100;
+	}
+
 
 	private Date parseDate(String rawData) {
 		if (StringUtils.isAlpha(rawData)){

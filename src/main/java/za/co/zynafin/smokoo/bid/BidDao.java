@@ -24,7 +24,7 @@ public class BidDao {
 	private DataSource dataSource;
 	private SimpleJdbcTemplate template;
 	private static String TOP_USER_BIDS = "select count(b.id) as hits,b.user,max(b.ammount),max(b.date) from bid b, auction a where a.auction_id = ? and b.auction = a.id group by user order by hits desc limit ?";
-	private static String LATEST_BIDS = "select a.date,ammount,user,type from bid b, auction a where a.auction_id = ? and b.auction = a.id order by date asc limit ?";
+	private static String LATEST_BIDS = "select b.date,ammount,user,type from bid b, auction a where a.auction_id = ? and b.auction = a.id order by b.ammount desc limit ?";
 	
 	public void init(){
 		template = new SimpleJdbcTemplate(dataSource);

@@ -34,7 +34,8 @@ public class OpenAuctionParserTests {
 		assertEquals(9685, firstAuction.getAuctionId());
 		assertEquals(DateUtils.truncate(DateUtils.addSeconds(new Date(), 7),Calendar.SECOND), DateUtils.truncate(firstAuction.getDate(),Calendar.SECOND));
 		assertEquals(new Double(14999.90), new Double(firstAuction.getRetailPrice()));
-//		assertEquals(false, firstAuction.getFastAndFurious());
+		assertEquals(false, firstAuction.isFastAndFurious());
+		assertEquals(new Double(0.05d), new Double(firstAuction.getBidIncrementAmount()));
 		
 		assertEquals("ARCHOS 10.1\" tablet", result.get(expectedSize - 1).getName());
 	}

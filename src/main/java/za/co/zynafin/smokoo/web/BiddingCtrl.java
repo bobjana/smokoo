@@ -9,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationEvent;
-import org.zkoss.lang.Threads;
 import org.zkoss.zk.ui.DesktopUnavailableException;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.UiException;
@@ -28,10 +27,12 @@ import za.co.zynafin.smokoo.auction.AuctionService;
 import za.co.zynafin.smokoo.auction.parser.AuctionActivityEvent;
 import za.co.zynafin.smokoo.bid.BidDao;
 import za.co.zynafin.smokoo.bid.UserBidSummary;
+import za.co.zynafin.smokoo.history.RecordingSpeedChangeEvent;
+import za.co.zynafin.smokoo.util.ApplicationEventPublisher;
 import za.co.zynafin.smokoo.util.ApplicationEventTranslator;
 import za.co.zynafin.smokoo.util.ComponentListener;
 
-public class BiddingCtrl extends BaseCtrl {
+public class BiddingCtrl extends BaseCtrl implements ComponentListener{
 
 	private static final Logger log = Logger.getLogger(BiddingCtrl.class);
 	private AuctionService auctionService;
@@ -43,6 +44,7 @@ public class BiddingCtrl extends BaseCtrl {
 	private Grid bidHistoryGrid;
 	private ApplicationEventTranslator applicationEventTranslator;
 	private BidDao bidDao;
+	private BlockingQueue<AuctionActivityEvent> events = new LinkedBlockingQueue<AuctionActivityEvent>();
 
 	@Override
 	public void afterCompose() {
@@ -52,7 +54,7 @@ public class BiddingCtrl extends BaseCtrl {
 		auction = Auction.findAuction(new Long(Executions.getCurrent().getParameter("auction")));
 		refreshAutoBiddingUI();
 		StatsDisplayer statsDisplayer = new StatsDisplayer();
-		applicationEventTranslator.addComponentListener(statsDisplayer);
+		applicationEventTranslator.addComponentListener(this);
 		Executors.newSingleThreadExecutor().execute(statsDisplayer);
 
 		bidHistoryGrid.setRowRenderer(new BidHistoryRowRenderer());
@@ -90,49 +92,60 @@ public class BiddingCtrl extends BaseCtrl {
 		auctionService.placeBid(auction);
 	}
 
-	private class StatsDisplayer extends Thread implements ComponentListener {
-
-		private BlockingQueue<AuctionActivityEvent> events = new LinkedBlockingQueue<AuctionActivityEvent>();
+	private class StatsDisplayer extends Thread {
+//
+//		BlockingQueue<AuctionActivityEvent> events;
+//		
+//		public StatsDisplayer(BlockingQueue<AuctionActivityEvent> events){
+//			this.events = events;
+//		}
 
 		@Override
 		public void run() {
 			try {
 				while (true) {
 					try {
+	System.out.println("event removed1 before.... " + events.size());
 						AuctionActivityEvent event = events.take();
-						Executions.activate(BiddingCtrl.this.getDesktop());
-
-						displayBidHistory(event.getBids());
-						displayTopUserBids(bidDao.listTopUserBids(auction.getAuctionId(), 10));
-						displayLastestBids(bidDao.listLastestBidsSummary(auction.getAuctionId(), 10));
-
-						Executions.deactivate(BiddingCtrl.this.getDesktop());
+	System.out.println("event removed1 after .... " + events.size());
+						Thread.sleep(5000);
+//						Executions.activate(BiddingCtrl.this.getDesktop());
+//
+//						displayBidHistory(event.getBids());
+//						displayTopUserBids(bidDao.listTopUserBids(auction.getAuctionId(), 10));
+//						displayLastestBids(bidDao.listLastestBidsSummary(auction.getAuctionId(), 10));
+//
+//						Executions.deactivate(BiddingCtrl.this.getDesktop());
+					}catch(DesktopUnavailableException e){
+						log.error(e);
 					} catch (Throwable ex) {
 						log.error(ex);
 						throw UiException.Aide.wrap(ex);
 					}
 				}
 			} finally {
-
-				// _chatroom.unsubscribe(this);
-			}
-		}
-
-		@Override
-		public void onEvent(ApplicationEvent event) {
-			if (event instanceof AuctionActivityEvent) {
-				if (((AuctionActivityEvent) event).getAuction().equals(auction)) {
-					try {
-						events.put((AuctionActivityEvent) event);
-					} catch (InterruptedException e) {
-						throw new RuntimeException(e);
-					}
-				}
+				 ApplicationEventPublisher.publishEvent(new RecordingSpeedChangeEvent(this, auction, 20000));
 			}
 		}
 
 	}
-
+	
+	
+	@Override
+	public void onEvent(ApplicationEvent event) {
+		if (event instanceof AuctionActivityEvent) {
+//System.out.println(event);
+			if (((AuctionActivityEvent) event).getAuction().equals(auction)) {
+				try {
+					events.put((AuctionActivityEvent) event);
+System.err.println("event recieved... " + events.size());
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+	}
+	
 	private void displayBidHistory(List<Bid> bids) {
 		Collections.reverse(bids);
 		bidHistoryGrid.setModel(new ListModelList(bids));

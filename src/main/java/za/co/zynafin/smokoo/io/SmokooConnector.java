@@ -61,9 +61,9 @@ public class SmokooConnector {
 								+ getSessionIdCookie());
 		int status;
 		try {
-			log.debug("Before execute of http get: " + url);
+			log.trace("Before execute of http get: " + url);
 			status = httpClient.executeMethod(getMethod);
-			log.debug("after execute of http get - " + status);
+			log.trace("after execute of http get - " + status);
 			if (HttpStatus.SC_OK != status) {
 				throw new RuntimeException("Unable to get smokoo content - " + status);
 			}

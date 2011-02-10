@@ -21,7 +21,7 @@ public class NetworkLatencyTracker {
 		w.start();
 		Object value = point.proceed();
 		w.stop();
-System.err.println(w.getTime());
+//System.err.println(w.getTime());
 //		applicationMessageSender.sendMessage(new NetworkLatency(w.getTime()));
 		return value;
 	}

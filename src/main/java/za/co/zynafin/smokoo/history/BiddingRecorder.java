@@ -51,12 +51,13 @@ public class BiddingRecorder implements ApplicationContextAware{
 
 	public void record(Auction auction) throws AuctionClosedException {
 		try {
-			log.debug("Record bids for auction - " + auction.getAuctionTitle());
+System.err.println("-----" + auction.getAuctionTitle());
+			log.debug(auction.getAuctionTitle() + " - auction record started");
 			String content = requestBidHistory(auction);
 			List<Bid> bids = bidParser.parse(content);
 			bidHistoryService.save(auction, bids);
 			applicationContext.publishEvent(new AuctionActivityEvent(this, auction, content, bids));
-			log.debug("Recording completed for auction - " + auction.getAuctionTitle());
+			log.debug(auction.getAuctionTitle() + " - auction record complete");
 		} catch (ParseException e) {
 			throw new RuntimeException("Unable to record auction",e);
 		}

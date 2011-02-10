@@ -24,6 +24,8 @@ import za.co.zynafin.smokoo.auction.AuctionHistory;
 import za.co.zynafin.smokoo.auction.AuctionIntervalType;
 import za.co.zynafin.smokoo.auction.AuctionResult;
 import za.co.zynafin.smokoo.auction.AuctionService;
+import za.co.zynafin.smokoo.history.RecordingSpeedChangeEvent;
+import za.co.zynafin.smokoo.util.ApplicationEventPublisher;
 import za.co.zynafin.smokoo.util.charts.XYChartRenderer;
 
 public class AuctionCtrl extends BaseCtrl {
@@ -39,7 +41,6 @@ public class AuctionCtrl extends BaseCtrl {
 	private long timeRemaining;
 	private int retryTimeRemainingCount = 0;
 	private Timer timeRemainingTimer;
-	private Timer statsRetrievalTimer;
 	private Semaphore semaphore = new Semaphore(1);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
 			"MM/dd HH:mm");
@@ -75,14 +76,14 @@ public class AuctionCtrl extends BaseCtrl {
 		auctionIFrame.setSrc("http://www.smokoo.co.za/auctions/"
 				+ auction.getAuctionTitle());
 		timeRemaining = auctionService.getTimeRemaining(auction);
-		// ApplicationEventPublisher.publishEvent(new
-		// RecordingSpeedChangeEvent(this, auction, 1000));
+System.err.println(auction.getAuctionTitle());
+		 ApplicationEventPublisher.publishEvent(new RecordingSpeedChangeEvent(this, auction, 4000));
 	}
 
 	public void onTimer$timeRemainingTimer(Event event) {
 		try {
 			semaphore.acquire();
-			timeRemaining -= 90;
+			timeRemaining -= 100;
 			if (timeRemaining <= 0) {
 				timeRemaining = auctionService.getTimeRemaining(auction);
 			}
@@ -117,12 +118,12 @@ public class AuctionCtrl extends BaseCtrl {
 
 	private String toHumanReadableTime(long time) {
 		if (time / (60 * 60 * 1000) > 0) {
-			return DurationFormatUtils.formatDuration(time, "HHh:mm:ss.SS");
+			return DurationFormatUtils.formatDuration(time, "HHh:mm:ss");
 		}
 		if (time / (60 * 1000) > 0) {
-			return DurationFormatUtils.formatDuration(time, "mm:ss.SS");
+			return DurationFormatUtils.formatDuration(time, "mm:ss");
 		}
-		return DurationFormatUtils.formatDuration(time, "ss.SS");
+		return DurationFormatUtils.formatDuration(time, "mm:ss");
 	}
 
 	private Popup createChartPopup(Set<AuctionResult> data) {
@@ -162,20 +163,23 @@ public class AuctionCtrl extends BaseCtrl {
 			AuctionResult result = (AuctionResult) data;
 			new Label(sdf.format(result.getDate())).setParent(row);
 			Label priceLabel = new Label("R " + result.getAmount());
+			priceLabel.setParent(row);
+			Label countLabel = new Label("" + result.getTotalNumberOfBidsPlaced());
+			countLabel.setParent(row);
 			if (result.getAmount() == auctionHistory.getMaxPrice()) {
 				priceLabel.setStyle("color:red;font-weight:bold;");
 			} else if (result.getAmount() == auctionHistory.getMinPrice()) {
 				priceLabel.setStyle("color:green;font-weight:bold;");
 			}
-			priceLabel.setParent(row);
-			Label bindCountLabel = new Label("" + result.getNumberOfBids());
-			bindCountLabel.setParent(row);
-			if (result.getNumberOfBids() == auctionHistory.getMaxCount()) {
-				bindCountLabel.setStyle("color:red;font-weight:bold;");
-			} else if (result.getNumberOfBids() == auctionHistory.getMinCount()) {
-				bindCountLabel.setStyle("color:green;font-weight:bold;");
-			}
+			
 			new Label(result.getWinner()).setParent(row);
+			Label bindsSpentLabel = new Label("" + result.getNumberOfBids());
+			bindsSpentLabel.setParent(row);
+			if (result.getNumberOfBids() == auctionHistory.getMaxCount()) {
+				bindsSpentLabel.setStyle("color:red;font-weight:bold;");
+			} else if (result.getNumberOfBids() == auctionHistory.getMinCount()) {
+				bindsSpentLabel.setStyle("color:green;font-weight:bold;");
+			}
 		}
 
 	}

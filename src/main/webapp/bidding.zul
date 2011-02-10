@@ -19,7 +19,7 @@
 						<grid id="bidHistoryGrid" height="250px">
 							<columns>
 								<column label="Date" width="70px" />
-								<column label="Price" width="50px" />
+								<column label="Price" width="70px" />
 								<column label="User" />
 								<column label="Type" width="70px" />
 							</columns>

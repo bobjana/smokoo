@@ -1,6 +1,5 @@
 package za.co.zynafin.smokoo.history;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -33,12 +32,6 @@ public class BiddingRecorderJob implements ApplicationListener<ApplicationEvent>
 
 	public void startRecording(Auction auction) {
 		if (!executions.containsKey(auction)){
-if (executions.size() > 0){
-System.out.println("--start record " + auction.getAuctionTitle());
-for (Auction execution : executions.keySet()){
-	System.out.println("-" + execution.getAuctionTitle());
-}
-}
 			startRecording(auction, DEFAULT_DELAY);
 		}
 	}
@@ -51,7 +44,6 @@ for (Auction execution : executions.keySet()){
 		RecordingTimerTask recordingTimerTask = new RecordingTimerTask(auction);
 		executions.put(auction, recordingTimerTask);
 		timer.schedule(recordingTimerTask, 0, period);
-System.out.println("start record " + period + "   " + executions.size());
 	}
 
 	public void stopRecording(Auction auction) {
@@ -59,6 +51,10 @@ System.out.println("start record " + period + "   " + executions.size());
 			executions.get(auction).cancel();
 			executions.remove(auction);
 		}
+	}
+	
+	public int numberOfJobsRunning(){
+		return executions.size();
 	}
 
 	public boolean isExecuting(Auction auction) {

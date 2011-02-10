@@ -25,7 +25,8 @@ public class AuctionDao {
 			",max(bid.ammount) as winning_amount" + 
 			",count(bid.id) as bid_count" + 
 			",bid.user" + 
-			",name " + 
+			",name" + 
+			",bid_increment_amount " + 
 			"from auction " + 
 			"left join bid " + 
 			"on bid.auction = auction.id " + 
@@ -53,7 +54,7 @@ public class AuctionDao {
 
 			@Override
 			public AuctionResult mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new AuctionResult(rs.getLong(1),rs.getTimestamp(2), rs.getDouble(3), rs.getInt(4), rs.getString(5));
+				return new AuctionResult(rs.getLong(1),rs.getTimestamp(2), rs.getDouble(3), rs.getInt(4), rs.getString(5),rs.getDouble(7));
 			}
 			
 		},parameters);
